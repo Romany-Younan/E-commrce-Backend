@@ -1,0 +1,77 @@
+<div class="bg-white border border-gray-100 p-6">
+  <div class="flex items-center justify-between mb-6 border-b pb-4">
+    <h2 class="text-2xl font-black text-blue-black uppercase">My Addresses</h2>
+    <button *ngIf="!showForm" (click)="openAddForm()"
+      class="flex items-center gap-2 bg-blue-black text-white px-5 py-2.5 text-sm font-bold uppercase hover:bg-salmon transition-colors">
+      <i class="pi pi-plus"></i> Add Address
+    </button>
+  </div>
+
+  
+  <form [formGroup]="addressForm" *ngIf="showForm" class="bg-almond p-5 mb-6 border border-gray-200">
+    <h3 class="text-sm font-black text-blue-black uppercase mb-4">{{ editingId ? 'Edit Address' : 'New Address' }}</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Label</label>
+        <select formControlName="label" class="border border-gray-200 bg-white px-4 py-3 text-sm focus:border-salmon focus:outline-none">
+          <option value="Home">Home</option>
+          <option value="Work">Work</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="flex items-end">
+        <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-600 mb-3">
+          <input type="checkbox" formControlName="isDefault" class="w-4 h-4 accent-salmon">
+          Set as default address
+        </label>
+      </div>
+      <div class="md:col-span-2 flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Address</label>
+        <textarea formControlName="addressText" rows="3" placeholder="Full address details…"
+          [ngClass]="{'border-red-400 focus:border-red-400 bg-red-50': addressForm.get('addressText')?.invalid && addressForm.get('addressText')?.touched}"
+          class="border border-gray-200 bg-white px-4 py-3 text-sm focus:border-salmon focus:outline-none resize-none w-full"></textarea>
+        <p *ngIf="addressForm.get('addressText')?.invalid && addressForm.get('addressText')?.touched" class="text-red-500 text-xs mt-0.5">Address text is required.</p>
+      </div>
+    </div>
+    <div class="flex gap-3">
+      <button (click)="saveAddress()" type="button" [disabled]="isSaving"
+        class="bg-blue-black text-white px-8 py-2.5 text-sm font-bold uppercase hover:bg-salmon transition-colors disabled:opacity-50">
+        {{ isSaving ? 'Saving…' : 'Save' }}
+      </button>
+      <button (click)="cancelForm()" type="button" class="border border-gray-300 text-gray-600 px-6 py-2.5 text-sm font-bold uppercase hover:border-salmon hover:text-salmon transition-colors">
+        Cancel
+      </button>
+    </div>
+  </form>
+
+  
+  <div *ngIf="isLoading" class="flex justify-center py-12">
+    <i class="pi pi-spin pi-spinner text-3xl text-salmon"></i>
+  </div>
+
+  
+  <div *ngIf="!isLoading && addresses.length === 0 && !showForm" class="text-center py-12 text-gray-400">
+    <i class="pi pi-map-marker text-4xl mb-3"></i>
+    <p class="font-semibold">No addresses yet. Add one to checkout faster!</p>
+  </div>
+
+  
+  <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div *ngFor="let addr of addresses" class="border p-4 relative"
+      [class.border-salmon]="addr.isDefault" [class.border-gray-100]="!addr.isDefault">
+      <div class="flex justify-between items-start mb-2">
+        <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5"
+          [class.bg-salmon]="addr.isDefault" [class.text-white]="addr.isDefault"
+          [class.bg-gray-100]="!addr.isDefault" [class.text-gray-500]="!addr.isDefault">
+          {{ addr.label }} {{ addr.isDefault ? '★ Default' : '' }}
+        </span>
+      </div>
+      <p class="text-sm text-gray-600 leading-relaxed mb-4">{{ addr.addressText }}</p>
+      <div class="flex gap-3 flex-wrap">
+        <button *ngIf="!addr.isDefault" (click)="setDefault(addr._id)" class="text-xs font-bold text-salmon hover:underline">Set as Default</button>
+        <button (click)="openEditForm(addr)" class="text-xs font-bold text-gray-500 hover:text-blue-black transition-colors">Edit</button>
+        <button (click)="deleteAddress(addr._id)" class="text-xs font-bold text-red-400 hover:text-red-600 transition-colors">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

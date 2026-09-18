@@ -1,0 +1,146 @@
+<div class="min-h-screen bg-almond">
+<div class="container mx-auto px-4 py-10">
+
+  
+  <div class="mb-8 border-b pb-4">
+    <h1 class="text-4xl font-black text-blue-black uppercase">All Products</h1>
+    <p class="text-gray-400 text-sm mt-1">{{ totalRecords }} items found</p>
+  </div>
+
+  
+  <div class="flex flex-col md:flex-row gap-4 mb-8 bg-almond p-4">
+
+    
+    <div class="flex-1 relative">
+      <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchInput()"
+        placeholder="Search products..."
+        class="w-full pl-9 pr-4 py-3 border border-gray-200 bg-white text-sm focus:outline-none focus:border-salmon transition-colors">
+    </div>
+
+    
+    <select
+      [(ngModel)]="selectedCategory"
+      (change)="onCategoryChange()"
+      class="py-3 px-4 border border-gray-200 bg-white text-sm text-gray-700 focus:outline-none focus:border-salmon cursor-pointer">
+      <option value="">All Categories</option>
+      <option *ngFor="let cat of categories" [value]="cat._id">{{ cat.title }}</option>
+    </select>
+
+    
+    <select
+      *ngIf="selectedCategory && subcategories.length > 0"
+      [(ngModel)]="selectedSubCategory"
+      (change)="onSubCategoryChange()"
+      class="py-3 px-4 border border-gray-200 bg-white text-sm text-gray-700 focus:outline-none focus:border-salmon cursor-pointer">
+      <option value="">All Subcategories</option>
+      <option *ngFor="let sub of subcategories" [value]="sub._id">{{ sub.title }}</option>
+    </select>
+
+    
+    <div class="flex items-center gap-2">
+      <input
+        type="number"
+        [(ngModel)]="minPrice"
+        (input)="onPriceChange()"
+        placeholder="Min Price"
+        class="w-24 py-3 px-3 border border-gray-200 bg-white text-sm focus:outline-none focus:border-salmon rounded-none"
+        min="0">
+      <span class="text-gray-400 font-bold">-</span>
+      <input
+        type="number"
+        [(ngModel)]="maxPrice"
+        (input)="onPriceChange()"
+        placeholder="Max Price"
+        class="w-24 py-3 px-3 border border-gray-200 bg-white text-sm focus:outline-none focus:border-salmon rounded-none"
+        min="0">
+    </div>
+
+    
+    <select
+      [(ngModel)]="selectedSort"
+      (change)="onSortChange()"
+      class="py-3 px-4 border border-gray-200 bg-white text-sm text-gray-700 focus:outline-none focus:border-salmon cursor-pointer">
+      <option *ngFor="let opt of sortOptions" [value]="opt.value">{{ opt.label }}</option>
+    </select>
+
+    
+    <button
+      *ngIf="searchQuery || selectedCategory || selectedSubCategory || minPrice !== null || maxPrice !== null || selectedSort !== '-createdAt'"
+      (click)="clearFilters()"
+      class="py-3 px-5 border border-salmon text-salmon text-sm font-semibold hover:bg-salmon hover:text-white transition-colors uppercase tracking-wide whitespace-nowrap">
+      Clear Filters
+    </button>
+  </div>
+
+  
+  <div *ngIf="isLoading" class="flex justify-center items-center py-24">
+    <i class="pi pi-spin pi-spinner text-4xl text-salmon"></i>
+  </div>
+
+  
+  <div *ngIf="!isLoading && products.length === 0" class="text-center py-24">
+    <i class="pi pi-search text-5xl text-gray-200 mb-4"></i>
+    <h2 class="text-xl font-bold text-blue-black mb-2">No products found</h2>
+    <p class="text-gray-400 mb-6">Try adjusting your search or clearing the filters.</p>
+    <button (click)="clearFilters()" class="bg-blue-black text-white px-8 py-3 uppercase text-sm font-bold hover:bg-salmon transition-colors">
+      Clear Filters
+    </button>
+  </div>
+
+  
+  <div *ngIf="!isLoading && products.length > 0"
+    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8">
+    <div *ngFor="let product of products"
+      [routerLink]="['/product', product._id]"
+      class="group cursor-pointer">
+
+      
+      <div class="relative overflow-hidden aspect-[3/4] bg-gray-50 mb-3">
+        <img
+          [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')"
+          [alt]="product.name"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+        
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100">
+          <span class="bg-white text-blue-black text-xs font-bold uppercase px-6 py-2 hover:bg-salmon hover:text-white transition-colors">
+            View Details
+          </span>
+        </div>
+
+        
+        <div *ngIf="product.stock === 0"
+          class="absolute top-2 left-2 bg-gray-700 text-white text-[10px] font-bold uppercase px-2 py-1">
+          Sold Out
+        </div>
+        <div *ngIf="product.stock > 0 && product.stock <= 3"
+          class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold uppercase px-2 py-1">
+          Only {{ product.stock }} left
+        </div>
+      </div>
+
+      
+      <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1">
+        {{ getCategoryName(product) }}
+      </p>
+      <h3 class="text-sm font-bold text-blue-black mb-1 truncate">{{ product.name }}</h3>
+      <span class="text-salmon font-bold">${{ product.price }}</span>
+    </div>
+  </div>
+
+  
+  <div class="mt-12 flex justify-center" *ngIf="totalRecords > rows">
+    <p-paginator
+      (onPageChange)="onPageChange($event)"
+      [first]="(page - 1) * rows"
+      [rows]="rows"
+      [totalRecords]="totalRecords">
+    </p-paginator>
+  </div>
+
+</div>
+</div>

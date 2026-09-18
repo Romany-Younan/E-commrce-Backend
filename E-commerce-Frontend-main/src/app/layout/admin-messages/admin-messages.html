@@ -1,0 +1,78 @@
+<div class="mb-4 flex justify-between items-center">
+  <h2 class="text-2xl font-black text-blue-black uppercase">Messages Management</h2>
+</div>
+
+<p-table [value]="messages" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+  [loading]="isLoading"
+  styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Customer</th>
+      <th>Email</th>
+      <th>Subject</th>
+      <th pSortableColumn="createdAt">Date <p-sortIcon field="createdAt"></p-sortIcon></th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-msg>
+    <tr>
+      <td class="font-semibold text-sm">{{msg.userId?.name || 'Unknown User'}}</td>
+      <td class="text-sm text-gray-600">{{msg.userId?.email || 'N/A'}}</td>
+      <td class="text-sm text-gray-800 max-w-xs truncate">{{msg.subject}}</td>
+      <td class="text-sm text-gray-500">{{msg.createdAt | date:'dd MMM yyyy, h:mm a'}}</td>
+      <td class="flex gap-2">
+        <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text p-button-sm text-blue-500" (click)="openDetail(msg)"></button>
+        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-sm text-red-500" (click)="deleteMessage($event, msg._id)"></button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="5" class="text-center py-8 text-gray-500">
+        <i class="pi pi-inbox text-3xl mb-2 block"></i>
+        No customer messages received yet.
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="detailDialog" [style]="{width: '560px'}" header="Message Details" [modal]="true" *ngIf="selectedMessage">
+  <ng-template pTemplate="content">
+    <div class="space-y-4 mt-2">
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Customer Name</p>
+          <p class="font-semibold text-gray-800">{{selectedMessage.userId?.name || 'Unknown User'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Date / Time</p>
+          <p class="text-gray-800">{{selectedMessage.createdAt | date:'dd MMM yyyy, h:mm a'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Customer Email</p>
+          <p class="text-gray-800">{{selectedMessage.userId?.email || 'N/A'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Customer Mobile</p>
+          <p class="text-gray-800">{{selectedMessage.userId?.mobile || 'N/A'}}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-xs font-bold text-gray-400 uppercase">Subject</p>
+          <p class="font-semibold text-gray-900 mt-0.5">{{selectedMessage.subject}}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-xs font-bold text-gray-400 uppercase mb-2">Message Body</p>
+          <p class="text-sm text-gray-700 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed whitespace-pre-wrap">{{selectedMessage.message}}</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton label="Close" icon="pi pi-times" class="p-button-text text-gray-600" (click)="detailDialog = false"></button>
+    <button pButton label="Delete Message" icon="pi pi-trash" class="bg-red-600 border-none text-white hover:bg-red-700" (click)="deleteMessage($event, selectedMessage._id)"></button>
+  </ng-template>
+</p-dialog>
+
+
+<p-confirmDialog></p-confirmDialog>

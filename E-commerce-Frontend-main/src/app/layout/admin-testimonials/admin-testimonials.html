@@ -1,0 +1,83 @@
+<div class="mb-4 flex justify-between items-center">
+  <h2 class="text-2xl font-black text-blue-black uppercase">Testimonials Management</h2>
+</div>
+
+<p-table [value]="testimonials" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+  [globalFilterFields]="['comment','status']"
+  styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Customer</th>
+      <th>Comment</th>
+      <th>Rating</th>
+      <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+      <th pSortableColumn="createdAt">Date <p-sortIcon field="createdAt"></p-sortIcon></th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-t>
+    <tr>
+      <td class="font-semibold text-sm">{{t.userName || 'Unknown'}}</td>
+      <td class="text-sm text-gray-600 max-w-xs truncate">{{t.comment}}</td>
+      <td>
+        <div class="flex items-center gap-1">
+          <span *ngFor="let i of [1,2,3,4,5]" class="text-lg" [class.text-salmon]="i <= t.stars" [class.text-gray-300]="i > t.stars">★</span>
+          <span class="text-xs text-gray-400 ml-1">({{t.stars}}/5)</span>
+        </div>
+      </td>
+      <td>
+        <p-tag [value]="t.status" [severity]="getSeverity(t.status)" styleClass="uppercase text-xs font-bold"></p-tag>
+      </td>
+      <td class="text-sm text-gray-500">{{t.createdAt | date:'dd MMM yyyy'}}</td>
+      <td class="flex gap-2">
+        <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text p-button-sm text-blue-500" (click)="openDetail(t)"></button>
+        <button pButton icon="pi pi-check" class="p-button-rounded p-button-text p-button-sm text-green-600"
+          *ngIf="t.status !== 'approved'" (click)="updateStatus(t._id, 'approved')"></button>
+        <button pButton icon="pi pi-times" class="p-button-rounded p-button-text p-button-sm text-red-500"
+          *ngIf="t.status !== 'refused'" (click)="updateStatus(t._id, 'refused')"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="detailDialog" [style]="{width: '520px'}" header="Testimonial Details" [modal]="true" *ngIf="selectedTestimonial">
+  <ng-template pTemplate="content">
+    <div class="space-y-4 mt-2">
+      <div class="grid grid-cols-2 gap-3 text-sm">
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Customer</p>
+          <p class="font-semibold">{{selectedTestimonial.userName || 'Unknown'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Date</p>
+          <p>{{selectedTestimonial.createdAt | date:'dd MMM yyyy'}}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-xs font-bold text-gray-400 uppercase mb-1">Rating</p>
+          <div class="flex items-center gap-1">
+            <span *ngFor="let i of [1,2,3,4,5]" class="text-2xl" [class.text-salmon]="i <= selectedTestimonial.stars" [class.text-gray-300]="i > selectedTestimonial.stars">★</span>
+            <span class="text-sm text-gray-500 ml-2 font-bold">{{selectedTestimonial.stars}}/5</span>
+          </div>
+        </div>
+        <div class="col-span-2">
+          <p class="text-xs font-bold text-gray-400 uppercase mb-2">Full Comment</p>
+          <p class="text-sm text-gray-700 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">{{selectedTestimonial.comment}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Status</p>
+          <p-tag [value]="selectedTestimonial.status" [severity]="getSeverity(selectedTestimonial.status)" styleClass="uppercase text-xs font-bold mt-1"></p-tag>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton label="Close" icon="pi pi-times" class="p-button-text text-gray-600" (click)="detailDialog = false"></button>
+    <button *ngIf="selectedTestimonial.status !== 'refused'" pButton label="Refuse" icon="pi pi-times-circle"
+      class="bg-red-50 border border-red-300 text-red-600 hover:bg-red-100"
+      (click)="updateStatus(selectedTestimonial._id, 'refused')"></button>
+    <button *ngIf="selectedTestimonial.status !== 'approved'" pButton label="Approve" icon="pi pi-check-circle"
+      class="bg-green-600 border-none text-white hover:bg-green-700"
+      (click)="updateStatus(selectedTestimonial._id, 'approved')"></button>
+  </ng-template>
+</p-dialog>

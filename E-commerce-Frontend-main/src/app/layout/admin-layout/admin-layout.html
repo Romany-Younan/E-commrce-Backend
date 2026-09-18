@@ -1,0 +1,145 @@
+<div class="flex h-screen bg-gray-50 font-sans text-gray-800">
+  
+  
+  <div [class.w-64]="isSidebarOpen" [class.w-0]="!isSidebarOpen" [class.opacity-100]="isSidebarOpen" [class.opacity-0]="!isSidebarOpen"
+       class="bg-white shadow-xl transition-all duration-300 overflow-hidden flex flex-col z-20">
+    
+    
+    <div class="h-16 flex items-center justify-center border-b border-gray-100 px-6 shrink-0">
+      <span class="text-lg font-black text-blue-black uppercase tracking-widest truncate">Admin Panel</span>
+    </div>
+
+    
+    <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+      <a routerLink="/admin" routerLinkActive="bg-salmon text-white shadow-md" [routerLinkActiveOptions]="{exact: true}"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-home text-lg"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <div class="pt-4 pb-2">
+        <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Catalog</p>
+      </div>
+
+      <a routerLink="/admin/products" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-box text-lg"></i>
+        <span>Products</span>
+      </a>
+
+      <a routerLink="/admin/categories" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-sitemap text-lg"></i>
+        <span>Categories</span>
+      </a>
+
+      <a routerLink="/admin/subcategories" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-list text-lg"></i>
+        <span>Subcategories</span>
+      </a>
+
+      <div class="pt-4 pb-2">
+        <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Sales & Users</p>
+      </div>
+
+      <a routerLink="/admin/orders" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-shopping-cart text-lg"></i>
+        <span>Orders</span>
+      </a>
+
+      <a routerLink="/admin/users" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-users text-lg"></i>
+        <span>Users</span>
+      </a>
+
+      <a routerLink="/admin/testimonials" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-star text-lg"></i>
+        <span>Testimonials</span>
+      </a>
+
+      <a routerLink="/admin/refunds" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-reply text-lg"></i>
+        <span>Refunds</span>
+      </a>
+
+      <a routerLink="/admin/messages" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-envelope text-lg"></i>
+        <span>Messages</span>
+      </a>
+
+      <div class="pt-4 pb-2">
+        <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Content</p>
+      </div>
+
+      <a routerLink="/admin/hero-slides" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-images text-lg"></i>
+        <span>Hero Slides</span>
+      </a>
+
+      <div class="pt-4 pb-2">
+        <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Analytics</p>
+      </div>
+
+      <a routerLink="/admin/reports" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-chart-line text-lg"></i>
+        <span>Reports</span>
+      </a>
+
+      <div class="pt-4 pb-2">
+        <p class="px-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Configuration</p>
+      </div>
+
+      <a routerLink="/admin/settings" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-cog text-lg"></i>
+        <span>Store Settings</span>
+      </a>
+
+      <a routerLink="/admin/maintenance" routerLinkActive="bg-salmon text-white shadow-md"
+         class="flex items-center gap-3 px-4 py-3 rounded-lg font-semibold text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+        <i class="pi pi-database text-lg"></i>
+        <span>Maintenance</span>
+      </a>
+    </nav>
+  </div>
+
+  
+  <div class="flex-1 flex flex-col overflow-hidden">
+    
+    
+    <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
+      <button (click)="toggleSidebar()" class="text-gray-500 hover:text-salmon transition-colors outline-none focus:outline-none">
+        <i class="pi pi-bars text-xl"></i>
+      </button>
+
+      <div class="flex items-center gap-4">
+        
+        <button type="button" class="flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-salmon transition-colors outline-none" (click)="menu.toggle($event)">
+          <div class="w-8 h-8 rounded-full bg-blue-black text-white flex items-center justify-center font-bold">
+            A
+          </div>
+          <span class="hidden sm:block">Admin</span>
+          <i class="pi pi-angle-down text-xs"></i>
+        </button>
+        <p-menu #menu [model]="userMenu" [popup]="true"></p-menu>
+      </div>
+    </header>
+
+    
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 min-h-full">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+
+  </div>
+
+</div>

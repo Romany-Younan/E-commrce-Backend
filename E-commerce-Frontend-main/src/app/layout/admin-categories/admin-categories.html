@@ -1,0 +1,61 @@
+<div class="mb-4 flex justify-between items-center">
+  <h2 class="text-2xl font-black text-blue-black uppercase">Categories Management</h2>
+  <button pButton type="button" label="Add New Category" icon="pi pi-plus" 
+    class="bg-blue-black text-white hover:bg-salmon border-none px-4 py-2 font-bold uppercase text-sm"
+    (click)="openNew()">
+  </button>
+</div>
+
+<p-table [value]="categories" [paginator]="true" [rows]="10" responsiveLayout="scroll" 
+  [globalFilterFields]="['title']"
+  styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
+      <th pSortableColumn="isActive">Active <p-sortIcon field="isActive"></p-sortIcon></th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-category>
+    <tr>
+      <td class="font-bold text-gray-700">{{category.title}}</td>
+      <td>
+        <span class="px-2 py-1 rounded text-xs font-bold uppercase" 
+          [class.bg-green-100]="category.isActive" [class.text-green-800]="category.isActive"
+          [class.bg-red-100]="!category.isActive" [class.text-red-800]="!category.isActive">
+          {{category.isActive ? 'Active' : 'Inactive'}}
+        </span>
+      </td>
+      <td>
+        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm mr-2 text-blue-500" (click)="editCategory(category)"></button>
+        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-sm text-red-500" (click)="deleteCategory($event, category)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="categoryDialog" [style]="{width: '450px'}" [header]="isEditing ? 'Edit Category' : 'Add New Category'" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="grid gap-4 mt-2">
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
+        <input type="text" pInputText [(ngModel)]="currentCategory.title" required autofocus class="w-full border-gray-300 rounded" />
+      </div>
+
+      
+      <div class="flex items-center gap-2 mt-4">
+        <label class="text-xs font-bold text-gray-500 uppercase">Active Status</label>
+        <input type="checkbox" [(ngModel)]="currentCategory.isActive" class="w-4 h-4 text-salmon border-gray-300 rounded focus:ring-salmon" />
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancel" icon="pi pi-times" class="p-button-text text-gray-600" (click)="hideDialog()"></button>
+    <button pButton label="Save" icon="pi pi-check" class="bg-salmon border-none text-white px-4 hover:bg-blue-black" (click)="saveCategory()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

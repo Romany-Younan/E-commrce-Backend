@@ -1,0 +1,102 @@
+<div class="min-h-screen bg-almond">
+<div class="container mx-auto px-4 py-12 min-h-[60vh]">
+
+  <div *ngIf="isLoading" class="flex justify-center items-center py-24">
+    <i class="pi pi-spin pi-spinner text-4xl text-salmon"></i>
+  </div>
+
+  <div *ngIf="!isLoading && product" class="flex flex-col md:flex-row gap-12">
+    
+    <div class="md:w-1/2">
+      <div class="aspect-[3/4] overflow-hidden bg-gray-50 border border-gray-100">
+        <img [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')"
+          [alt]="product.name" class="w-full h-full object-cover">
+      </div>
+    </div>
+
+    
+    <div class="md:w-1/2 flex flex-col justify-start pt-2">
+      
+      <p class="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
+        <a routerLink="/" class="hover:text-salmon transition-colors">Home</a>
+        <span class="mx-2">/</span>
+        <a routerLink="/products" class="hover:text-salmon transition-colors">Products</a>
+        <span class="mx-2">/</span>
+        <span class="text-blue-black">{{ product.name }}</span>
+      </p>
+
+      <h1 class="text-4xl font-black text-blue-black uppercase leading-tight mb-2">{{ product.name }}</h1>
+      <div class="text-3xl font-bold text-salmon mb-6">${{ product.price }}</div>
+
+      
+      <div class="flex items-center gap-3 mb-6 pb-6 border-b border-gray-100">
+        <span class="text-sm font-semibold text-gray-500 uppercase">Availability:</span>
+        <span *ngIf="product.stock > 3" class="text-green-600 font-bold uppercase text-sm">In Stock</span>
+        <span *ngIf="product.stock > 0 && product.stock <= 3" class="text-red-500 font-bold uppercase text-sm">Only {{ product.stock }} left!</span>
+        <span *ngIf="product.stock === 0" class="text-gray-400 font-bold uppercase text-sm">Out of Stock</span>
+      </div>
+
+      
+      <p *ngIf="product.desc" class="text-gray-600 leading-relaxed mb-8">{{ product.desc }}</p>
+
+      
+      <div *ngIf="product.stock > 0 && !isAdmin" class="flex items-center gap-4 mb-6">
+        <span class="text-sm font-semibold text-gray-500 uppercase">Quantity:</span>
+        <div class="flex items-center border border-gray-300">
+          <button (click)="changeQuantity(-1)" [disabled]="quantity <= 1"
+            class="px-4 py-2 hover:bg-gray-100 text-lg font-bold text-gray-600 transition-colors disabled:opacity-40">−</button>
+          <span class="px-5 py-2 font-semibold border-x border-gray-300 min-w-[50px] text-center">{{ quantity }}</span>
+          <button (click)="changeQuantity(1)" [disabled]="quantity >= product.stock"
+            class="px-4 py-2 hover:bg-gray-100 text-lg font-bold text-gray-600 transition-colors disabled:opacity-40">+</button>
+        </div>
+      </div>
+
+      
+      <button *ngIf="!isAdmin" pButton type="button"
+        [disabled]="product.stock === 0"
+        (click)="addToCart()"
+        [label]="addedToCart ? '✓ Added to Cart!' : 'Add to Cart'"
+        icon="pi pi-shopping-cart"
+        class="w-full border-none py-4 text-base uppercase font-bold tracking-wider transition-colors duration-300"
+        [class.bg-green-600]="addedToCart"
+        [class.bg-blue-black]="!addedToCart"
+        [class.text-white]="true">
+      </button>
+
+      <a *ngIf="addedToCart" routerLink="/cart"
+        class="block text-center text-sm text-salmon font-semibold mt-3 hover:underline">
+        View Cart →
+      </a>
+    </div>
+    </div>
+  </div>
+
+  
+  <div *ngIf="!isLoading && relatedProducts.length > 0" class="mt-24 border-t border-gray-200 pt-12 pb-16">
+    <h2 class="text-3xl font-black text-blue-black uppercase mb-8 text-center">You May Also Like</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      
+      <div *ngFor="let item of relatedProducts" 
+           class="group cursor-pointer bg-white border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300"
+           [routerLink]="['/product', item._id]">
+        
+        <div class="aspect-[3/4] overflow-hidden bg-gray-50 relative">
+          <img [src]="'http://localhost:3000/uploads/' + item.image.replace('uploads/', '')" 
+               [alt]="item.name" 
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          
+          <div *ngIf="item.stock === 0" class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wider">
+            Sold Out
+          </div>
+        </div>
+
+        <div class="p-4 text-center">
+          <h3 class="text-sm font-bold text-blue-black uppercase mb-1 truncate">{{ item.name }}</h3>
+          <p class="text-salmon font-bold">${{ item.price }}</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+
+</div>

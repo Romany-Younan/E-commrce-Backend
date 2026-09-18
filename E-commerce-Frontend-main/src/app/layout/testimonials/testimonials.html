@@ -1,0 +1,57 @@
+<div class="min-h-screen bg-almond py-16 px-4">
+  <div class="container mx-auto">
+    
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-black text-blue-black uppercase tracking-wide">What Our Customers Say</h1>
+      <p class="text-gray-500 mt-4 max-w-xl mx-auto">Real feedback from real people. We take pride in delivering the best quality casual fashion.</p>
+    </div>
+
+    
+    <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+      <i class="pi pi-spin pi-spinner text-4xl text-salmon"></i>
+    </div>
+
+    
+    <div *ngIf="!isLoading && testimonials.length === 0" class="text-center py-20">
+      <i class="pi pi-comment text-6xl text-gray-300 mb-4"></i>
+      <h2 class="text-2xl font-bold text-gray-400">No testimonials yet.</h2>
+      <p class="text-gray-500 mt-2">Check back soon for customer reviews.</p>
+    </div>
+
+    
+    <div *ngIf="!isLoading && testimonials.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      
+      <div *ngFor="let t of testimonials" class="bg-white p-8 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col justify-between">
+        
+        <div>
+          
+          <div class="flex items-center gap-1 mb-4">
+            <i *ngFor="let s of [1,2,3,4,5]" 
+               class="pi" 
+               [ngClass]="s <= t.stars ? 'pi-star-fill text-salmon' : 'pi-star text-gray-300'">
+            </i>
+          </div>
+          
+          
+          <p class="text-gray-600 text-sm leading-relaxed mb-6 italic">
+            "{{ t.comment }}"
+          </p>
+        </div>
+
+        
+        <div class="flex items-center gap-3 mt-auto pt-6 border-t border-gray-50">
+          <div class="w-10 h-10 rounded-full bg-blue-black text-white flex items-center justify-center font-bold text-sm">
+            {{ t.userName.charAt(0).toUpperCase() }}
+          </div>
+          <div>
+            <h4 class="font-bold text-blue-black text-sm">{{ t.userName }}</h4>
+            <p class="text-xs text-gray-400">{{ t.createdAt | date:'mediumDate' }}</p>
+          </div>
+        </div>
+        
+      </div>
+
+    </div>
+
+  </div>
+</div>

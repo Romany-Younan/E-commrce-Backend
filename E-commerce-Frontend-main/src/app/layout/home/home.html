@@ -1,0 +1,163 @@
+
+<section class="relative w-full overflow-hidden bg-blue-black" style="height: 520px;">
+
+  
+  <div *ngFor="let slide of slides; let i = index"
+    class="absolute inset-0 transition-opacity duration-700 ease-in-out"
+    [class.opacity-100]="i === activeSlide"
+    [class.opacity-0]="i !== activeSlide">
+    <img
+      [src]="'http://localhost:3000/uploads/' + slide.image.replace('uploads/', '')"
+      [alt]="slide.title"
+      class="w-full h-full object-cover object-top">
+    
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
+
+    
+    <div class="absolute inset-0 flex flex-col justify-center px-8 md:px-20 lg:px-32">
+      <p class="text-salmon text-sm font-semibold tracking-[0.4em] uppercase mb-4 animate__animated animate__fadeInDown">
+        Casual Fashion
+      </p>
+      <h1 class="text-white font-black uppercase leading-tight mb-4"
+        style="font-size: clamp(2rem, 6vw, 5rem);">
+        {{ slide.title }}
+      </h1>
+      <p *ngIf="slide.subtitle" class="text-gray-200 text-lg mb-8 max-w-md">
+        {{ slide.subtitle }}
+      </p>
+      <a [routerLink]="slide.ctaLink"
+        class="inline-block w-fit bg-salmon text-white hover:bg-white hover:text-blue-black transition-colors duration-300 py-4 px-10 text-sm uppercase font-bold tracking-widest">
+        {{ slide.ctaText }}
+      </a>
+    </div>
+  </div>
+
+  
+  <div *ngIf="slides.length === 0" class="absolute inset-0 bg-almond flex items-center justify-center">
+    <div class="text-center">
+      <i class="pi pi-spin pi-spinner text-4xl text-salmon mb-4"></i>
+    </div>
+  </div>
+
+  
+  <button *ngIf="slides.length > 1"
+    (click)="prevSlide()"
+    class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white border border-white/30 w-12 h-12 flex items-center justify-center transition-all duration-200 backdrop-blur-sm z-10">
+    <i class="pi pi-angle-left text-2xl"></i>
+  </button>
+  <button *ngIf="slides.length > 1"
+    (click)="nextSlide()"
+    class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/40 text-white border border-white/30 w-12 h-12 flex items-center justify-center transition-all duration-200 backdrop-blur-sm z-10">
+    <i class="pi pi-angle-right text-2xl"></i>
+  </button>
+
+  
+  <div *ngIf="slides.length > 1" class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+    <button *ngFor="let slide of slides; let i = index"
+      (click)="goToSlide(i)"
+      class="rounded-full transition-all duration-300"
+      [class.w-8]="i === activeSlide"
+      [class.w-2]="i !== activeSlide"
+      [class.h-2]="true"
+      [class.bg-salmon]="i === activeSlide"
+      [class.bg-white]="i !== activeSlide"
+      [class.opacity-60]="i !== activeSlide">
+    </button>
+  </div>
+</section>
+
+
+<section class="py-16 px-4 bg-white" *ngIf="newArrivals.length > 0">
+  <div class="container mx-auto">
+    <div class="flex items-center justify-between mb-10">
+      <div>
+        <p class="text-sm font-semibold tracking-[0.3em] uppercase text-salmon mb-1">Just Dropped</p>
+        <h2 class="text-3xl font-black text-blue-black uppercase">New Arrivals</h2>
+      </div>
+      <a routerLink="/products" class="text-sm font-semibold text-blue-black hover:text-salmon transition-colors uppercase tracking-wider border-b border-blue-black hover:border-salmon pb-1">View All →</a>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div *ngFor="let product of newArrivals"
+        [routerLink]="['/product', product._id]"
+        class="group cursor-pointer">
+        <div class="relative overflow-hidden aspect-[3/4] bg-gray-50 mb-3">
+          <img [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')" [alt]="product.name"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+          <div *ngIf="product.stock === 0"
+            class="absolute top-2 left-2 bg-gray-800 text-white text-[10px] font-bold uppercase px-2 py-1">
+            Sold Out
+          </div>
+          <div *ngIf="product.stock > 0 && product.stock <= 3"
+            class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold uppercase px-2 py-1">
+            Only {{product.stock}} left
+          </div>
+        </div>
+        <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1">{{ getCategoryName(product) }}</p>
+        <h3 class="text-sm font-bold text-blue-black truncate mb-1">{{ product.name }}</h3>
+        <span class="text-salmon font-bold text-sm">${{ product.price }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="bg-blue-black py-16 text-center">
+  <p class="text-sm font-semibold tracking-[0.4em] uppercase text-salmon mb-3">Customer Favorites</p>
+  <h2 class="text-3xl md:text-5xl font-black text-white uppercase">Best Sellers</h2>
+</section>
+
+
+<section class="py-16 px-4 bg-gray-50" *ngIf="bestSellers.length > 0">
+  <div class="container mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div *ngFor="let product of bestSellers"
+        [routerLink]="['/product', product._id]"
+        class="group cursor-pointer">
+        <div class="relative overflow-hidden aspect-[3/4] bg-white mb-3">
+          <img [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')" [alt]="product.name"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        </div>
+        <p class="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-1">{{ getCategoryName(product) }}</p>
+        <h3 class="text-sm font-bold text-blue-black truncate mb-1">{{ product.name }}</h3>
+        <span class="text-salmon font-bold text-sm">${{ product.price }}</span>
+      </div>
+    </div>
+    <div class="text-center mt-10">
+      <a routerLink="/products"
+        class="inline-block border-2 border-blue-black text-blue-black hover:bg-blue-black hover:text-white transition-colors duration-300 py-3 px-10 text-sm uppercase font-bold tracking-widest">
+        See All Products
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<section class="py-16 px-4 bg-white" *ngIf="testimonials.length > 0">
+  <div class="container mx-auto text-center">
+    <p class="text-sm font-semibold tracking-[0.4em] uppercase text-salmon mb-3">Happy Customers</p>
+    <h2 class="text-3xl font-black text-blue-black uppercase mb-12">What They Say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let t of testimonials"
+        class="bg-almond p-6 text-left hover:shadow-md transition-shadow duration-300">
+        <div class="flex mb-4">
+          <span *ngFor="let star of [1,2,3,4,5]" class="text-xl"
+            [class.text-salmon]="star <= t.stars"
+            [class.text-gray-300]="star > t.stars">★</span>
+        </div>
+        <p class="text-gray-600 text-sm leading-relaxed mb-5 italic">"{{ t.comment }}"</p>
+        <p class="text-blue-black font-bold text-sm uppercase tracking-wide">— {{ getUserName(t.userId, 'Customer') }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="bg-almond py-20 text-center px-4">
+  <h2 class="text-3xl md:text-5xl font-black text-blue-black uppercase mb-4">Ready to upgrade your wardrobe?</h2>
+  <p class="text-gray-500 mb-8 text-base max-w-lg mx-auto">Browse the full catalog and find your next go-to look.</p>
+  <a routerLink="/products"
+    class="inline-block bg-blue-black text-white hover:bg-salmon transition-colors duration-300 py-4 px-12 text-sm uppercase font-bold tracking-widest">
+    Explore All Products
+  </a>
+</section>

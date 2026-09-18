@@ -1,0 +1,108 @@
+<nav class="w-full flex flex-col justify-between items-center relative main transition-all duration-500 ease-in-out bg-almond xl:pr-[50px] shadow-sm z-50">
+  <div class="relative box-border w-full flex flex-row justify-between items-center px-4 py-2">
+    
+    <div class="font-semibold text-sm w-auto lg:w-[250px] text-blue-black min-w-max min-h-max z-10 cursor-pointer" routerLink="/">
+      <span class="text-xl font-bold text-dark-purple">CASUAL FASHION</span>
+    </div>
+
+    
+    <div class="hidden md:flex flex-1 justify-center items-center bg-almond">
+      <ul class="flex flex-row justify-center items-center gap-8 lg:gap-12">
+        <li class="duration-100 font-semibold text-sm text-blue-black hover:text-salmon transition-all ease-in-out cursor-pointer flex items-center gap-1.5" routerLink="/" routerLinkActive="text-salmon" [routerLinkActiveOptions]="{exact: true}">
+          <i class="pi pi-home"></i> Home
+        </li>
+        <li class="duration-100 font-semibold text-sm text-blue-black hover:text-salmon transition-all ease-in-out cursor-pointer flex items-center gap-1.5" routerLink="/products" routerLinkActive="text-salmon">
+          <i class="pi pi-tags"></i> Products
+        </li>
+        <li class="duration-100 font-semibold text-sm text-blue-black hover:text-salmon transition-all ease-in-out cursor-pointer flex items-center gap-1.5" routerLink="/about" routerLinkActive="text-salmon">
+          <i class="pi pi-info-circle"></i> About
+        </li>
+        <li class="duration-100 font-semibold text-sm text-blue-black hover:text-salmon transition-all ease-in-out cursor-pointer flex items-center gap-1.5" routerLink="/contact" routerLinkActive="text-salmon">
+          <i class="pi pi-envelope"></i> Contact
+        </li>
+        <li class="duration-100 font-semibold text-sm text-blue-black hover:text-salmon transition-all ease-in-out cursor-pointer flex items-center gap-1.5" routerLink="/testimonials" routerLinkActive="text-salmon">
+          <i class="pi pi-star-fill"></i> Testimonials
+        </li>
+      </ul>
+    </div>
+
+    
+    <div class="hidden md:flex w-auto lg:w-[250px] flex-row justify-end items-center bg-almond z-10">
+      <ul class="flex flex-row justify-end items-center gap-6">
+        <li *ngIf="token" class="hidden lg:flex flex-col leading-tight text-right duration-100 font-semibold text-sm text-blue-black">
+          <span class="text-xs font-normal">Welcome,</span>
+          <span class="max-w-[100px] truncate" title="{{userName}}">{{userName}}</span>
+        </li>
+        <li *ngIf="token" routerLink="/account" class="whitespace-nowrap duration-100 font-semibold text-sm text-blue-black hover:text-salmon transition-all ease-in-out cursor-pointer">
+          My Account
+        </li>
+        
+        <li *ngIf="isAdmin">
+          <a routerLink="/admin"
+            class="flex items-center gap-1.5 bg-blue-black text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 hover:bg-salmon transition-colors duration-300">
+            <i class="pi pi-cog"></i> Admin Panel
+          </a>
+        </li>
+        <li class="transition-all duration-100 cursor-pointer relative" routerLink="/cart">
+          <i class="pi pi-shopping-cart text-[24px] text-blue-black hover:text-salmon"></i>
+          <span *ngIf="cartCount > 0" class="absolute -top-2 -right-3 bg-salmon text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{{cartCount}}</span>
+        </li>
+        <li *ngIf="!token" class="flex gap-2 items-center">
+          <button routerLink="/login" class="bg-transparent border border-blue-black text-blue-black hover:bg-blue-black hover:text-white transition-colors duration-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5">
+            Log In
+          </button>
+          <button routerLink="/signup" class="bg-blue-black border border-blue-black text-white hover:bg-salmon hover:border-salmon transition-colors duration-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5">
+            Sign Up
+          </button>
+        </li>
+        <li *ngIf="token">
+          <button (click)="logout()" class="bg-transparent border border-gray-300 text-gray-500 hover:border-red-400 hover:text-red-500 transition-colors duration-300 text-xs font-bold uppercase tracking-wider px-3 py-1.5">
+            Log Out
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    
+    <div class="w-full flex flex-row justify-end md:hidden bg-almond self-center z-10">
+      <p-drawer [(visible)]="sidebarVisible" styleClass="bg-almond py-3 w-[75%]">
+        <ul class="flex flex-col justify-between items-start my-4 space-y-4">
+          <li class="w-full leading-[32px] mx-2 font-semibold text-sm text-blue-black cursor-pointer" routerLink="/" (click)="toggleSideBar()">
+            <i class="pi pi-home text-[24px] inline-block align-middle"></i><span class="ml-2 align-middle">Home</span>
+          </li>
+          <li class="w-full leading-[32px] mx-2 font-semibold text-sm text-blue-black cursor-pointer" routerLink="/products" (click)="toggleSideBar()">
+            <i class="pi pi-tags text-[24px] inline-block align-middle"></i><span class="ml-2 align-middle">Products</span>
+          </li>
+          <li class="w-full leading-[32px] mx-2 font-semibold text-sm text-blue-black cursor-pointer" routerLink="/about" (click)="toggleSideBar()">
+            <i class="pi pi-info-circle text-[24px] inline-block align-middle"></i><span class="ml-2 align-middle">About</span>
+          </li>
+          <li class="w-full leading-[32px] mx-2 font-semibold text-sm text-blue-black cursor-pointer" routerLink="/testimonials" (click)="toggleSideBar()">
+            <i class="pi pi-star-fill text-[24px] inline-block align-middle"></i><span class="ml-2 align-middle">Testimonials</span>
+          </li>
+          <li *ngIf="token" class="w-full leading-[32px] mx-2 font-semibold text-sm text-blue-black cursor-pointer" routerLink="/account" (click)="toggleSideBar()">
+            <i class="pi pi-user text-[24px] inline-block align-middle"></i><span class="ml-2 align-middle">My Account</span>
+          </li>
+          
+          <li *ngIf="isAdmin" class="w-full leading-[32px] mx-2 cursor-pointer" routerLink="/admin" (click)="toggleSideBar()">
+            <div class="flex items-center gap-2 bg-blue-black text-white px-3 py-2 rounded font-bold text-sm uppercase tracking-wider">
+              <i class="pi pi-cog text-[18px]"></i><span>Admin Panel</span>
+            </div>
+          </li>
+          <li class="w-full leading-[32px] mx-2 font-semibold text-sm text-blue-black cursor-pointer" routerLink="/cart" (click)="toggleSideBar()">
+            <i class="pi pi-shopping-cart text-[24px] inline-block align-middle"></i><span class="ml-2 align-middle">Cart</span>
+          </li>
+          <li class="w-full leading-[32px] mx-2 font-semibold text-sm text-blue-black cursor-pointer">
+            <div *ngIf="!token" routerLink="/login" (click)="toggleSideBar()" class="flex items-center">
+              <i class="pi pi-sign-in text-[24px] inline-block"></i><span class="ml-2">Log in</span>
+            </div>
+            <div *ngIf="token" (click)="logout(); toggleSideBar()" class="flex items-center">
+              <i class="pi pi-sign-out text-[24px] inline-block"></i><span class="ml-2">Log out</span>
+            </div>
+          </li>
+        </ul>
+      </p-drawer>
+
+      <i (click)="toggleSideBar()" class="pi pi-bars text-[28px] cursor-pointer text-blue-black hover:text-salmon transition-all duration-150"></i>
+    </div>
+  </div>
+</nav>

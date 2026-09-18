@@ -1,0 +1,100 @@
+<div class="mb-4 flex justify-between items-center">
+  <h2 class="text-2xl font-black text-blue-black uppercase">Users Management</h2>
+</div>
+
+<div class="mb-4">
+  <input pInputText [(ngModel)]="searchQuery" (ngModelChange)="filterUsers()" placeholder="Search by name, email, or mobile..."
+    class="w-full sm:w-80 border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-salmon">
+</div>
+
+<p-table [value]="filteredUsers" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+  styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+      <th pSortableColumn="email">Email <p-sortIcon field="email"></p-sortIcon></th>
+      <th>Mobile</th>
+      <th pSortableColumn="role">Role <p-sortIcon field="role"></p-sortIcon></th>
+      <th>Status</th>
+      <th pSortableColumn="createdAt">Joined <p-sortIcon field="createdAt"></p-sortIcon></th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-user>
+    <tr>
+      <td class="font-semibold text-gray-700">{{user.name}}</td>
+      <td class="text-sm text-gray-500">{{user.email}}</td>
+      <td class="text-sm text-gray-500">{{user.mobile || 'N/A'}}</td>
+      <td>
+        <p-tag [value]="user.role" [severity]="user.role === 'admin' ? 'danger' : 'info'" styleClass="uppercase text-xs font-bold"></p-tag>
+      </td>
+      <td>
+        <span class="px-2 py-1 rounded text-xs font-bold uppercase"
+          [class.bg-green-100]="user.isActive" [class.text-green-800]="user.isActive"
+          [class.bg-red-100]="!user.isActive" [class.text-red-800]="!user.isActive">
+          {{user.isActive ? 'Active' : 'Inactive'}}
+        </span>
+      </td>
+      <td class="text-sm text-gray-500">{{user.createdAt | date:'dd MMM yyyy'}}</td>
+      <td>
+        <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text p-button-sm text-blue-500" (click)="openDetail(user)"></button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr><td colspan="7" class="text-center p-4 text-gray-400">No users found.</td></tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="detailDialog" [style]="{width: '500px'}" header="User Details" [modal]="true" *ngIf="selectedUser">
+  <ng-template pTemplate="content">
+    <div class="space-y-3 mt-2 text-sm">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Name</p>
+          <p class="font-semibold">{{selectedUser.name}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Role</p>
+          <p-tag [value]="selectedUser.role" [severity]="selectedUser.role === 'admin' ? 'danger' : 'info'" styleClass="uppercase text-xs font-bold"></p-tag>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Mobile</p>
+          <p>{{selectedUser.mobile || 'N/A'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Email</p>
+          <p>{{selectedUser.email || 'N/A'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Gender</p>
+          <p>{{selectedUser.gender || 'N/A'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Joined</p>
+          <p>{{selectedUser.createdAt | date:'dd MMM yyyy'}}</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-xs font-bold text-gray-400 uppercase">Account Status</p>
+          <span class="px-2 py-1 rounded text-xs font-bold uppercase"
+            [class.bg-green-100]="selectedUser.isActive" [class.text-green-800]="selectedUser.isActive"
+            [class.bg-red-100]="!selectedUser.isActive" [class.text-red-800]="!selectedUser.isActive">
+            {{selectedUser.isActive ? 'Active' : 'Deactivated'}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton label="Close" icon="pi pi-times" class="p-button-text text-gray-600" (click)="detailDialog = false"></button>
+    <button *ngIf="selectedUser.isActive" pButton label="Deactivate" icon="pi pi-ban"
+      class="bg-red-50 border border-red-300 text-red-600 hover:bg-red-100"
+      [loading]="isToggling"
+      (click)="toggleActive()"></button>
+    <button *ngIf="!selectedUser.isActive" pButton label="Activate" icon="pi pi-check-circle"
+      class="bg-green-600 border-none text-white hover:bg-green-700"
+      [loading]="isToggling"
+      (click)="toggleActive()"></button>
+  </ng-template>
+</p-dialog>

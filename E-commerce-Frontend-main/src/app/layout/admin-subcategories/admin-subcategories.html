@@ -1,0 +1,75 @@
+<div class="mb-4 flex justify-between items-center">
+  <h2 class="text-2xl font-black text-blue-black uppercase">Subcategories Management</h2>
+  <button pButton type="button" label="Add New Subcategory" icon="pi pi-plus" 
+    class="bg-blue-black text-white hover:bg-salmon border-none px-4 py-2 font-bold uppercase text-sm"
+    (click)="openNew()">
+  </button>
+</div>
+
+<p-table [value]="subcategories" [paginator]="true" [rows]="10" responsiveLayout="scroll" 
+  [globalFilterFields]="['title', 'categoryId.title']"
+  styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="title">Title <p-sortIcon field="title"></p-sortIcon></th>
+      <th pSortableColumn="categoryId.title">Parent Category <p-sortIcon field="categoryId.title"></p-sortIcon></th>
+      <th pSortableColumn="isActive">Active <p-sortIcon field="isActive"></p-sortIcon></th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-sub>
+    <tr>
+      <td class="font-bold text-gray-700">{{sub.title}}</td>
+      <td class="text-gray-500 font-semibold">{{sub.categoryId?.title || 'N/A'}}</td>
+      <td>
+        <span class="px-2 py-1 rounded text-xs font-bold uppercase" 
+          [class.bg-green-100]="sub.isActive" [class.text-green-800]="sub.isActive"
+          [class.bg-red-100]="!sub.isActive" [class.text-red-800]="!sub.isActive">
+          {{sub.isActive ? 'Active' : 'Inactive'}}
+        </span>
+      </td>
+      <td>
+        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm mr-2 text-blue-500" (click)="editSubCategory(sub)"></button>
+        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-sm text-red-500" (click)="deleteSubCategory($event, sub)"></button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4" class="text-center p-4">No subcategories found.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="subCategoryDialog" [style]="{width: '450px'}" [header]="isEditing ? 'Edit Subcategory' : 'Add New Subcategory'" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="grid gap-4 mt-2">
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title</label>
+        <input type="text" pInputText [(ngModel)]="currentSubCategory.title" required autofocus class="w-full border-gray-300 rounded" />
+      </div>
+
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Parent Category</label>
+        <p-select [options]="categories" [(ngModel)]="currentSubCategory.categoryId" optionLabel="title" optionValue="_id" placeholder="Select a Category" [style]="{'width':'100%'}" appendTo="body"></p-select>
+        <small class="text-red-500 block mt-1" *ngIf="!currentSubCategory.categoryId">Parent Category is required</small>
+      </div>
+
+      
+      <div class="flex items-center gap-2 mt-4">
+        <label class="text-xs font-bold text-gray-500 uppercase">Active Status</label>
+        <input type="checkbox" [(ngModel)]="currentSubCategory.isActive" class="w-4 h-4 text-salmon border-gray-300 rounded focus:ring-salmon" />
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancel" icon="pi pi-times" class="p-button-text text-gray-600" (click)="hideDialog()"></button>
+    <button pButton label="Save" icon="pi pi-check" class="bg-salmon border-none text-white px-4 hover:bg-blue-black" (click)="saveSubCategory()" [disabled]="!currentSubCategory.title || !currentSubCategory.categoryId"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

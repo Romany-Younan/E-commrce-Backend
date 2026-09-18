@@ -1,0 +1,378 @@
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+  scrollbar-width: auto; /* "auto" or "thin" */
+  scrollbar-color: rgb(186, 186, 186) #F2E1D9; /* scroll thumb and track */
+  scroll-behavior: smooth;
+  // font-size:16px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+}
+
+
+@keyframes fadeInUp {
+  0% {
+      visibility: hidden;
+      transform: translate3d(0,100%,0)
+  }
+
+  to {
+      opacity: 1;
+      transform: translateZ(0)
+  }
+}
+
+
+
+
+
+
+
+
+body {
+  font-family:"Poppins",sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  overflow-x: visible;
+
+
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box!important;
+
+}
+
+html{
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none!important;
+}
+
+ul{
+  list-style: none!important;
+  padding: 0;
+}
+
+
+
+
+
+
+// *::-webkit-scrollbar {
+//   width: 12px; /* width of the entire scrollbar */
+// }
+
+// *::-webkit-scrollbar-track {
+//   background: orange; /* color of the tracking area */
+// }
+
+// *::-webkit-scrollbar-thumb {
+//   // scrollbar-color: rgb(116, 116, 116) #F2E1D9; /* color of the scroll thumb */
+//   border-radius: 20px; /* roundness of the scroll thumb */
+//   // border: 3px solid orange; /* creates padding around scroll thumb */
+// }
+
+
+
+p-dropdown
+{
+  display: flex!important;
+  width: 150px!important;
+  height: 40px!important;
+  flex-direction: column;
+  justify-content: center ;
+}
+
+
+
+
+
+
+
+.p-rating .p-rating-icon.p-rating-icon-active {
+  color: #FD8F5F!important;
+}
+
+
+.p-rating .p-rating-icon.pi-star-fill {
+  color: #FD8F5F !important;
+}
+
+.p-rating:not(.p-disabled):not(.p-readonly) .p-rating-icon:hover {
+  color: #FD8F5F!important;
+}
+
+.p-rating:not(.p-disabled):not(.p-readonly) .p-rating-icon{
+  color: #FD8F5F!important;
+}
+
+.p-fluid .p-inputnumber .p-inputnumber-input {
+  width: 100%;
+  min-width: 70%!important;
+}
+
+.p-hidden-accessible{
+  visibility: hidden!important;
+  pointer-events: none!important
+
+}
+
+
+.desc > span{
+  font-size: 14px;
+
+}
+.p-accordion .p-accordion-header .p-accordion-header-link {
+  padding: 0!important;
+  border: none!important;
+  color: #6b7280;
+  background: transparent!important;
+  font-weight: 700;
+  border-radius: 6px;
+  transition: box-shadow 0.2s;
+}
+
+.p-accordion-header-text  {
+  color: #FD8F5F !important;
+  margin-left: 10px;
+}
+
+
+.p-toast-message-content{
+  padding-left: 10px!important;
+  height: 90px!important;
+  display: flex!important;
+  flex-direction: row!important;
+  align-items: center!important;
+}
+
+p-toastitem{
+  height: 90px!important;
+}
+checkicon{
+  width: 15px!important;
+  height: 20px!important;
+  margin-right: 20px!important;
+
+
+
+}
+
+.p-toast-icon-close{
+  align-self: flex-start!important;
+}
+
+
+
+
+.p-galleria .p-galleria-thumbnail-container {
+  background: transparent!important;
+  padding: 1rem 0.25rem;
+}
+
+
+
+
+.p-inputtext {
+  font-family: var(--font-family);
+  font-feature-settings: var(--font-feature-settings, normal);
+  font-size: 1rem;
+  color: #4b5563;
+  background: #ffffff;
+  padding: 0.75rem 0.75rem;
+  border: 1px solid rgb(225, 225, 225)!important;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  width: 70px!important;
+  height: 60px!important;
+  border-radius: 0px!important;
+  text-align: center!important;
+}
+
+.p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: none!important;
+  border: 1px solid rgb(225, 225, 225)!important;
+
+}
+
+
+.p-button
+{
+  border-radius: 0px!important;
+  border: 1px solid rgb(225, 225, 225)!important;
+  font-weight: 200!important;
+
+
+}
+
+
+.p-inputtext{
+
+  width: 100%!important;
+  height: auto!important;
+  border-radius: 3px!important;
+  border: none!important
+}
+
+
+.p-dropdown-clear-icon {
+  top: 17px!important;
+  right: 60px!important;
+}
+
+p-dropdown{
+  width: 100%!important;
+
+
+}
+
+
+.p-inputwrapper{
+  border: 1px solid #eee!important
+
+}
+
+.p-dropdown-items li{
+  padding-left: 10px!important;
+}
+
+
+
+
+
+/* Removed static overlay override that was breaking dropdowns */
+
+
+/* =========================================
+   ADMIN PANEL SCOPED OVERRIDES
+   Fixes PrimeNG table/button styles inside
+   the admin dashboard without touching the
+   rest of the storefront.
+   ========================================= */
+
+app-admin-layout,
+app-admin-dashboard,
+app-admin-products,
+app-admin-categories,
+app-admin-subcategories,
+app-admin-orders,
+app-admin-users,
+app-admin-testimonials,
+app-admin-reports {
+
+  /* Table rows — white background */
+  .p-datatable .p-datatable-tbody > tr {
+    background: #ffffff !important;
+    color: #374151 !important;
+  }
+
+  /* Striped rows */
+  .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+    background: #f9fafb !important;
+  }
+
+  /* Table header */
+  .p-datatable .p-datatable-thead > tr > th {
+    background: #f3f4f6 !important;
+    color: #6b7280 !important;
+    font-size: 0.7rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #e5e7eb !important;
+  }
+
+  /* Row hover */
+  .p-datatable .p-datatable-tbody > tr:hover {
+    background: #fef3f0 !important;
+  }
+
+  /* Reset button styles for admin icon buttons */
+  .p-button {
+    border: none !important;
+    font-weight: 600 !important;
+  }
+
+  /* Reset p-inputtext for admin forms — white bg, visible text */
+  .p-inputtext {
+    width: 100% !important;
+    height: auto !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    text-align: left !important;
+    padding: 0.5rem 0.75rem !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  /* Select/Dropdown in admin */
+  .p-select, p-select {
+    width: 100% !important;
+  }
+
+  /* PrimeNG select label text visibility */
+  .p-select-label {
+    color: #111827 !important;
+    background: #ffffff !important;
+  }
+
+  /* Wrapper (used by p-select) — white bg */
+  .p-inputwrapper {
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    background: #ffffff !important;
+  }
+
+  /* Dialog background & text */
+  .p-dialog .p-dialog-content {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+
+  .p-dialog .p-dialog-header {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+
+  .p-dialog .p-dialog-footer {
+    background: #f9fafb !important;
+    border-top: 1px solid #e5e7eb !important;
+  }
+
+  /* Plain inputs inside dialogs */
+  .p-dialog input,
+  .p-dialog textarea {
+    background: #f9fafb !important;
+    color: #111827 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+  }
+
+  /* Dialog footer buttons */
+  .p-dialog-footer .p-button {
+    border-radius: 0 !important;
+  }
+
+  /* Pagination */
+  .p-paginator {
+    background: #ffffff !important;
+    border-top: 1px solid #e5e7eb !important;
+  }
+}

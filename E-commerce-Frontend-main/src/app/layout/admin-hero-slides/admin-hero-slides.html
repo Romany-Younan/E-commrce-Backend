@@ -1,0 +1,116 @@
+<div class="mb-6 flex justify-between items-center border-b pb-4">
+  <div>
+    <h2 class="text-2xl font-black text-blue-black uppercase">Hero Slides</h2>
+    <p class="text-sm text-gray-500 mt-1">Manage the homepage carousel slides.</p>
+  </div>
+  <button pButton type="button" label="Add Slide" icon="pi pi-plus"
+    class="bg-blue-black text-white hover:bg-salmon border-none px-4 py-2 font-bold uppercase text-sm"
+    (click)="openNew()">
+  </button>
+</div>
+
+<p-confirmDialog></p-confirmDialog>
+
+<div *ngIf="isLoading" class="flex justify-center py-12">
+  <i class="pi pi-spin pi-spinner text-3xl text-salmon"></i>
+</div>
+
+<div *ngIf="!isLoading && slides.length === 0" class="text-center py-16 text-gray-400">
+  <i class="pi pi-images text-4xl mb-3"></i>
+  <p>No slides yet. Add your first slide.</p>
+</div>
+
+<div *ngIf="!isLoading && slides.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div *ngFor="let slide of slides" class="bg-white border border-gray-100 shadow-sm rounded overflow-hidden">
+    <div class="aspect-[16/7] bg-gray-100 overflow-hidden">
+      <img [src]="'http://localhost:3000/uploads/' + slide.image.replace('uploads/', '')"
+           [alt]="slide.title" class="w-full h-full object-cover">
+    </div>
+    <div class="p-4">
+      <div class="flex justify-between items-start mb-2">
+        <h3 class="font-black text-blue-black text-sm uppercase truncate flex-1 mr-2">{{ slide.title }}</h3>
+        <span class="text-xs font-bold px-2 py-0.5 rounded"
+          [class.bg-green-100]="slide.isActive" [class.text-green-700]="slide.isActive"
+          [class.bg-red-100]="!slide.isActive" [class.text-red-600]="!slide.isActive">
+          {{ slide.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+      <p class="text-xs text-gray-400 mb-1">Order: {{ slide.order }}</p>
+      <p *ngIf="slide.subtitle" class="text-xs text-gray-500 truncate mb-3">{{ slide.subtitle }}</p>
+
+      <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-gray-400">{{ slide.isActive ? 'Active' : 'Inactive' }}</span>
+          <p-toggleSwitch [(ngModel)]="slide.isActive" (onChange)="toggleActive(slide)"></p-toggleSwitch>
+        </div>
+        <div class="flex gap-2">
+          <button pButton icon="pi pi-pencil"
+            class="p-button-rounded p-button-text p-button-sm text-blue-500"
+            (click)="editSlide(slide)"></button>
+          <button pButton icon="pi pi-trash"
+            class="p-button-rounded p-button-text p-button-sm text-red-500"
+            (click)="confirmDelete($event, slide)"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<p-dialog [(visible)]="slideDialog" [style]="{width: '560px'}" [header]="isEditing ? 'Edit Slide' : 'Add New Slide'" [modal]="true">
+  <ng-template pTemplate="content">
+    <form [formGroup]="slideForm" class="flex flex-col gap-4 mt-2">
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Title <span class="text-red-500">*</span></label>
+        <input pInputText formControlName="title" class="w-full"
+          [ngClass]="{'border-red-500': f['title'].touched && f['title'].invalid}">
+        <small *ngIf="f['title'].touched && f['title'].hasError('required')" class="text-red-500 block mt-1">Title is required.</small>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Subtitle</label>
+        <input pInputText formControlName="subtitle" class="w-full">
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Button Text</label>
+          <input pInputText formControlName="ctaText" class="w-full">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Button Link</label>
+          <input pInputText formControlName="ctaLink" class="w-full">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Display Order</label>
+        <input type="number" pInputText formControlName="order" class="w-full">
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">
+          Image <span *ngIf="!isEditing" class="text-red-500">*</span>
+        </label>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="text-sm w-full">
+        <small *ngIf="!isEditing && !selectedFile" class="text-red-500 mt-1 block">Image is required for new slides.</small>
+
+        <div *ngIf="previewUrl" class="mt-3 rounded overflow-hidden border border-gray-200 aspect-[16/7]">
+          <img [src]="previewUrl" class="w-full h-full object-cover" alt="Preview">
+        </div>
+        <div *ngIf="isEditing && !previewUrl && selectedSlide?.image" class="mt-3 rounded overflow-hidden border border-gray-200 aspect-[16/7]">
+          <img [src]="'http://localhost:3000/uploads/' + selectedSlide?.image?.replace('uploads/', '')" class="w-full h-full object-cover" alt="Current image">
+        </div>
+      </div>
+
+    </form>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancel" icon="pi pi-times" class="p-button-text text-gray-600" (click)="slideDialog = false"></button>
+    <button pButton [label]="isSaving ? 'Saving...' : 'Save'" icon="pi pi-check"
+      class="bg-salmon border-none text-white hover:bg-blue-black"
+      [loading]="isSaving"
+      (click)="saveSlide()"></button>
+  </ng-template>
+</p-dialog>

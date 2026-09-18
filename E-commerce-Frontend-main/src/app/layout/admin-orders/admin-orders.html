@@ -1,0 +1,90 @@
+<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+  <h2 class="text-2xl font-black text-blue-black uppercase">Orders Management</h2>
+  
+  <div class="flex items-center gap-2">
+    <label class="text-xs font-bold text-gray-500 uppercase whitespace-nowrap">Filter Status:</label>
+    <p-select [options]="filterOptions" [(ngModel)]="statusFilter" (onChange)="applyFilter()" optionLabel="label" optionValue="value" class="w-48"></p-select>
+  </div>
+</div>
+
+<p-table [value]="filteredOrders" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+  [globalFilterFields]="['_id','status']"
+  styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="createdAt">Date <p-sortIcon field="createdAt"></p-sortIcon></th>
+      <th>Order ID</th>
+      <th>Customer</th>
+      <th pSortableColumn="totalPrice">Total <p-sortIcon field="totalPrice"></p-sortIcon></th>
+      <th>Items</th>
+      <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-order>
+    <tr>
+      <td class="text-sm text-gray-500">{{order.createdAt | date:'dd MMM yyyy'}}</td>
+      <td class="font-mono text-xs text-gray-600">{{order._id | slice:0:12}}...</td>
+      <td class="text-sm font-semibold">{{order.userId?.name || 'N/A'}}</td>
+      <td class="text-salmon font-bold">${{order.totalPrice}}</td>
+      <td class="text-sm text-gray-600">{{order.items?.length}} item(s)</td>
+      <td>
+        <p-tag [value]="order.status | orderStatus" [severity]="getSeverity(order.status)" styleClass="uppercase text-xs font-bold"></p-tag>
+      </td>
+      <td>
+        <button pButton icon="pi pi-eye" class="p-button-rounded p-button-text p-button-sm text-blue-500" (click)="viewOrder(order)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="detailDialog" [style]="{width: '650px'}" header="Order Details" [modal]="true" *ngIf="selectedOrder">
+  <ng-template pTemplate="content">
+    <div class="space-y-4 mt-2">
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Order ID</p>
+          <p class="font-mono text-gray-700">{{selectedOrder._id}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Date</p>
+          <p>{{selectedOrder.createdAt | date:'dd MMM yyyy, h:mm a'}}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Customer</p>
+          <p class="font-semibold">{{ getUserName(selectedOrder.userId) }}</p>
+        </div>
+        <div>
+          <p class="text-xs font-bold text-gray-400 uppercase">Phone</p>
+          <p>{{selectedOrder.phoneNumber}}</p>
+          <p *ngIf="selectedOrder.backupPhone" class="text-xs text-gray-500 mt-0.5">(Backup: {{selectedOrder.backupPhone}})</p>
+        </div>
+        <div class="col-span-2">
+          <p class="text-xs font-bold text-gray-400 uppercase">Address</p>
+          <p>{{selectedOrder.addressSnapshot}}</p>
+        </div>
+      </div>
+
+      <div class="border-t pt-4">
+        <p class="text-xs font-bold text-gray-400 uppercase mb-2">Items</p>
+        <div *ngFor="let item of selectedOrder.items" class="flex justify-between text-sm py-2 border-b border-gray-50">
+          <span class="font-semibold">{{item.productNameSnapshot}} <span class="text-gray-400">x{{item.quantity}}</span></span>
+          <span class="text-salmon font-bold">${{item.priceSnapshot * item.quantity}}</span>
+        </div>
+        <div class="flex justify-between text-base font-black text-blue-black mt-3 pt-2 border-t">
+          <span>Total</span>
+          <span class="text-salmon">${{selectedOrder.totalPrice}}</span>
+        </div>
+      </div>
+
+      <div class="border-t pt-4">
+        <p class="text-xs font-bold text-gray-400 uppercase mb-2">Update Status</p>
+        <div class="flex gap-3">
+          <p-select [options]="statusOptions" [(ngModel)]="newStatus" optionLabel="label" optionValue="value" [style]="{'width':'100%'}" appendTo="body"></p-select>
+          <button pButton label="Update" icon="pi pi-check" class="bg-salmon border-none text-white whitespace-nowrap hover:bg-blue-black" (click)="updateStatus()"></button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

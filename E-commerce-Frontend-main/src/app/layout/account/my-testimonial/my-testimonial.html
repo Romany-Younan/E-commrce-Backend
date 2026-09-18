@@ -1,0 +1,123 @@
+<div class="bg-white border border-gray-100 p-6">
+  <h2 class="text-2xl font-black text-blue-black uppercase mb-6 border-b pb-4">My Review</h2>
+
+  <div *ngIf="isLoading" class="flex justify-center py-12">
+    <i class="pi pi-spin pi-spinner text-3xl text-salmon"></i>
+  </div>
+
+  <div *ngIf="!isLoading">
+
+    
+    <div *ngIf="successMsg" class="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 text-sm font-semibold">
+      {{ successMsg }}
+    </div>
+    <div *ngIf="errorMsg" class="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 text-sm font-semibold">
+      {{ errorMsg }}
+    </div>
+
+    
+    <div *ngIf="testimonial && !isEditing" class="mb-6 p-5 bg-almond border border-gray-200">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Your submission status</p>
+          <span class="px-3 py-1 text-xs font-bold uppercase rounded-full"
+            [class.bg-yellow-100]="testimonial.status === 'pending'"
+            [class.text-yellow-700]="testimonial.status === 'pending'"
+            [class.bg-green-100]="testimonial.status === 'approved'"
+            [class.text-green-700]="testimonial.status === 'approved'"
+            [class.bg-red-100]="testimonial.status === 'refused'"
+            [class.text-red-500]="testimonial.status === 'refused'">
+            {{ testimonial.status }}
+          </span>
+        </div>
+
+        
+        <div class="flex gap-2 shrink-0">
+          
+          <button *ngIf="testimonial.status === 'pending'"
+            (click)="cancelTestimonial($event)" [disabled]="isCancelling"
+            class="text-xs font-bold uppercase tracking-wider border border-red-200 text-red-500 hover:bg-red-50 px-4 py-2 transition-colors disabled:opacity-50">
+            <i *ngIf="isCancelling" class="pi pi-spin pi-spinner mr-1"></i>
+            Cancel Review
+          </button>
+
+          
+          <button *ngIf="testimonial.status === 'approved'"
+            (click)="openEditMode()"
+            class="text-xs font-bold uppercase tracking-wider border border-blue-black text-blue-black hover:bg-blue-black hover:text-white px-4 py-2 transition-colors">
+            Edit & Update
+          </button>
+        </div>
+      </div>
+
+      <div class="flex mt-3 gap-0.5">
+        <span *ngFor="let s of [1,2,3,4,5]" class="text-2xl"
+          [class.text-salmon]="s <= testimonial.stars" [class.text-gray-200]="s > testimonial.stars">★</span>
+      </div>
+      <p class="mt-3 text-gray-600 italic text-sm">"{{ testimonial.comment }}"</p>
+    </div>
+
+    
+    <div *ngIf="isEditing">
+      <p class="text-sm text-gray-500 mb-4">Update your review. It will be re-reviewed by an admin before going live again.</p>
+
+      
+      <div class="mb-5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Rating</label>
+        <div class="flex gap-1">
+          <button *ngFor="let s of [1,2,3,4,5]" type="button" (click)="setEditStars(s)"
+            class="text-3xl transition-transform hover:scale-110"
+            [class.text-salmon]="s <= editStars" [class.text-gray-200]="s > editStars">★</button>
+        </div>
+      </div>
+
+      
+      <div class="mb-5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Your Comment</label>
+        <textarea [(ngModel)]="editComment" rows="5" placeholder="Tell us what you think…"
+          class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-salmon focus:outline-none resize-none"></textarea>
+      </div>
+
+      <div class="flex gap-3">
+        <button (click)="cancelEditMode()"
+          class="border border-gray-300 text-gray-600 px-6 py-3 text-sm font-bold uppercase hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+        <button (click)="updateTestimonial()" [disabled]="isSaving || !editComment.trim()"
+          class="bg-blue-black text-white px-10 py-3 text-sm font-bold uppercase hover:bg-salmon transition-colors disabled:opacity-50">
+          {{ isSaving ? 'Updating…' : 'Update Review' }}
+        </button>
+      </div>
+    </div>
+
+    
+    <div *ngIf="!testimonial || testimonial.status === 'refused'">
+      <p class="text-sm text-gray-500 mb-6">Share your experience with the store. Your review will appear on the homepage after approval.</p>
+
+      
+      <div class="mb-5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Rating</label>
+        <div class="flex gap-1">
+          <button *ngFor="let s of [1,2,3,4,5]" type="button" (click)="setStars(s)"
+            class="text-3xl transition-transform hover:scale-110"
+            [class.text-salmon]="s <= stars" [class.text-gray-200]="s > stars">★</button>
+        </div>
+      </div>
+
+      
+      <div class="mb-5">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-2">Your Comment</label>
+        <textarea [(ngModel)]="comment" rows="5" placeholder="Tell us what you think…"
+          class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-salmon focus:outline-none resize-none"></textarea>
+      </div>
+
+      <button (click)="submit()" [disabled]="isSaving || !comment.trim()"
+        class="bg-blue-black text-white px-10 py-3 text-sm font-bold uppercase hover:bg-salmon transition-colors disabled:opacity-50">
+        {{ isSaving ? 'Submitting…' : 'Submit Review' }}
+      </button>
+    </div>
+
+  </div>
+
+  <p-confirmDialog></p-confirmDialog>
+</div>

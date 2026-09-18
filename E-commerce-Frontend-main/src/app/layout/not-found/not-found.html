@@ -1,0 +1,33 @@
+<div class="min-h-screen bg-almond">
+  <section class="bg-blue-black py-20 md:py-24 text-center px-4">
+    <p class="text-6xl md:text-8xl font-black text-salmon leading-none mb-4">404</p>
+    <p class="text-sm font-semibold tracking-[0.4em] uppercase text-white/70 mb-3">Lost in the mall</p>
+    <h1 class="text-3xl md:text-5xl font-black text-white uppercase leading-tight">{{ title }}</h1>
+  </section>
+
+  <section class="container mx-auto px-4 py-16 md:py-20">
+    <div class="max-w-xl mx-auto text-center bg-white p-10 md:p-12 border border-gray-100 shadow-sm">
+      <div class="w-20 h-20 bg-almond flex items-center justify-center mx-auto mb-6">
+        <i class="pi text-4xl text-salmon" [ngClass]="icon"></i>
+      </div>
+      <p class="text-gray-600 text-lg leading-relaxed mb-8">{{ message }}</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button
+          pButton
+          label="Back to Home"
+          icon="pi pi-home"
+          routerLink="/"
+          class="bg-blue-black border-none text-white hover:bg-salmon px-8 py-3 justify-center"
+        ></button>
+        <button
+          pButton
+          label="Browse Products"
+          icon="pi pi-arrow-right"
+          iconPos="right"
+          routerLink="/products"
+          class="bg-white border border-blue-black text-blue-black hover:bg-almond hover:border-salmon hover:text-salmon px-8 py-3 justify-center"
+        ></button>
+      </div>
+    </div>
+  </section>
+</div>

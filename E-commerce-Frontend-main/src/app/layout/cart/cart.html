@@ -1,0 +1,111 @@
+<div class="min-h-screen bg-almond">
+<div class="container mx-auto px-4 py-12 min-h-[60vh]">
+  <h1 class="text-4xl font-black text-blue-black uppercase mb-8 border-b pb-4">Your Cart</h1>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center py-20">
+    <i class="pi pi-spin pi-spinner text-4xl text-salmon"></i>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div *ngIf="!cart?.validItems?.length" class="text-center py-20 bg-gray-50 border border-dashed border-gray-300">
+      <i *ngIf="!isAdmin" class="pi pi-shopping-cart text-6xl text-gray-300 mb-4"></i>
+      <i *ngIf="isAdmin" class="pi pi-lock text-6xl text-gray-300 mb-4"></i>
+      
+      <h2 *ngIf="!isAdmin" class="text-2xl font-bold text-gray-500 mb-4">Your cart is empty</h2>
+      <h2 *ngIf="isAdmin" class="text-2xl font-bold text-gray-500 mb-4">Admins cannot make purchases</h2>
+      <p *ngIf="isAdmin" class="text-gray-500 mb-4">Please use a regular user account to place orders.</p>
+      
+      <button *ngIf="!isAdmin" pButton label="Continue Shopping" routerLink="/products" class="bg-blue-black border-none text-white hover:bg-salmon px-8 py-3"></button>
+      <button *ngIf="isAdmin" pButton label="Go to Dashboard" routerLink="/admin" class="bg-blue-black border-none text-white hover:bg-salmon px-8 py-3"></button>
+    </div>
+
+    <div *ngIf="cart?.validItems?.length" class="flex flex-col lg:flex-row gap-8">
+      
+      <div class="lg:w-2/3 flex flex-col gap-4">
+        <div *ngFor="let item of cart?.validItems" class="flex items-center gap-6 bg-white p-4 shadow-sm border border-gray-100">
+          <img [src]="'http://localhost:3000/uploads/' + item.product.image.replace('uploads/', '')" [alt]="item.product.name" class="w-24 h-32 object-cover bg-gray-50">
+          
+          <div class="flex-grow">
+            <h3 class="text-lg font-bold text-blue-black uppercase mb-1">{{item.product.name}}</h3>
+            <p class="text-salmon font-bold mb-4">${{item.price}}</p>
+            
+            <div class="flex items-center gap-4">
+              <div class="flex items-center border border-gray-300">
+                <button (click)="updateQuantity(item, -1)" class="px-3 py-1 hover:bg-gray-100 text-gray-600 transition-colors">-</button>
+                <span class="px-4 py-1 font-semibold border-x border-gray-300">{{item.quantity}}</span>
+                <button (click)="updateQuantity(item, 1)" class="px-3 py-1 hover:bg-gray-100 text-gray-600 transition-colors">+</button>
+              </div>
+              <button (click)="removeItem(item.cartItemId)" class="text-gray-400 hover:text-red-500 transition-colors" title="Remove Item">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+          
+          <div class="text-right font-bold text-xl text-blue-black min-w-[100px]">
+            ${{item.totalPrice}}
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="lg:w-1/3">
+        <div class="bg-gray-50 p-6 border border-gray-200">
+          <h2 class="text-2xl font-bold text-blue-black uppercase mb-6 border-b pb-4">Order Summary</h2>
+          
+          <div class="flex justify-between mb-4 text-gray-600">
+            <span>Subtotal</span>
+            <span class="font-bold text-blue-black">${{cart?.cartTotal}}</span>
+          </div>
+          <div class="flex justify-between mb-6 text-gray-600">
+            <span>Shipping</span>
+            <span class="font-bold text-blue-black">Calculated at checkout</span>
+          </div>
+          
+          <div class="flex justify-between mb-8 text-xl font-black text-blue-black border-t pt-4">
+            <span>Total</span>
+            <span class="text-salmon">${{cart?.cartTotal}}</span>
+          </div>
+
+          <button pButton label="Proceed to Checkout" routerLink="/checkout" class="w-full bg-blue-black border-none text-white hover:bg-salmon transition-colors py-4 uppercase font-bold text-lg"></button>
+          
+          
+          <div *ngIf="cart?.actionRequiredItems?.length" class="mt-8 border-t border-gray-200 pt-6">
+            <h3 class="text-sm font-bold text-red-500 uppercase mb-4 flex items-center gap-2">
+              <i class="pi pi-exclamation-triangle"></i> Action Required
+            </h3>
+            
+            <div *ngFor="let item of cart?.actionRequiredItems" class="bg-white border border-red-200 p-4 mb-4 shadow-sm">
+              <div class="flex items-start gap-4">
+                <img *ngIf="item.product?.image" [src]="'http://localhost:3000/uploads/' + item.product.image.replace('uploads/', '')" class="w-16 h-20 object-cover bg-gray-50">
+                <div class="flex-grow">
+                  <h4 class="text-sm font-bold text-blue-black">{{item.product?.name || 'Unknown Product'}}</h4>
+                  
+                  <div *ngIf="item.issue === 'price_changed'">
+                    <p class="text-xs text-gray-500 mt-1 mb-2">Price changed since added:</p>
+                    <div class="flex items-center gap-2 mb-3">
+                      <span class="text-sm text-gray-400 line-through">${{item.oldPrice}}</span>
+                      <i class="pi pi-arrow-right text-xs text-gray-400"></i>
+                      <span class="text-sm font-bold text-salmon">${{item.newPrice}}</span>
+                    </div>
+                    <div class="flex gap-2">
+                      <button (click)="acceptPriceChange(item)" class="text-xs font-bold text-white bg-blue-black px-3 py-1.5 hover:bg-salmon transition-colors">Accept & Keep Item</button>
+                      <button (click)="removeItem(item.cartItemId)" class="text-xs font-bold text-red-500 bg-red-50 px-3 py-1.5 hover:bg-red-100 transition-colors">Remove</button>
+                    </div>
+                  </div>
+
+                  <div *ngIf="item.issue === 'out_of_stock' || item.issue === 'unavailable'">
+                    <p class="text-xs text-red-500 mt-1 mb-3 font-semibold">{{item.message}}</p>
+                    <button (click)="removeItem(item.cartItemId)" class="text-xs font-bold text-red-500 bg-red-50 px-3 py-1.5 hover:bg-red-100 transition-colors">Remove from Cart</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <p class="text-xs text-gray-500 italic mt-2">*These items are excluded from your current total until resolved.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

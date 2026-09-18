@@ -1,0 +1,49 @@
+<div class="mb-6 flex justify-between items-center border-b pb-4">
+  <div>
+    <h2 class="text-2xl font-black text-blue-black uppercase">Store Settings</h2>
+    <p class="text-sm text-gray-500 mt-1">Control which products appear on the home page and products catalog.</p>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="flex justify-center items-center py-20">
+  <i class="pi pi-spin pi-spinner text-4xl text-salmon"></i>
+</div>
+
+<div *ngIf="!isLoading" class="max-w-3xl">
+  <div class="bg-blue-50 p-6 border border-blue-200 rounded-lg mb-6">
+    <h3 class="text-lg font-bold text-blue-black uppercase mb-3 flex items-center gap-2">
+      <i class="pi pi-info-circle"></i> Current Store Season
+    </h3>
+    <div class="flex items-center gap-4">
+      <div class="text-4xl font-black text-blue-black">{{ currentSeason }}</div>
+      <div class="text-sm text-gray-700">
+        <p class="font-semibold mb-1">What customers see:</p>
+        <p>Products tagged <strong>"{{ currentSeason }}"</strong> or <strong>"All Year"</strong> on the home page and products list.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 p-6 border border-gray-200 rounded-lg mb-6">
+    <h3 class="text-lg font-bold text-blue-black uppercase mb-4">Change Season</h3>
+    <p class="text-sm text-gray-600 mb-6">Assign each product a season when creating or editing it. This setting controls which of those products are visible on the storefront.</p>
+
+    <div class="flex flex-col gap-2 max-w-sm">
+      <label class="text-xs font-bold text-gray-500 uppercase">Store Season</label>
+      <p-select [options]="seasons" [(ngModel)]="currentSeason" optionLabel="label" optionValue="value" [style]="{'width':'100%'}"></p-select>
+    </div>
+  </div>
+
+  <div *ngIf="successMessage" class="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded text-sm font-bold flex items-center gap-2">
+    <i class="pi pi-check-circle"></i> {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded text-sm font-bold flex items-center gap-2">
+    <i class="pi pi-exclamation-circle"></i> {{ errorMessage }}
+  </div>
+
+  <button pButton type="button" label="Save Settings" icon="pi pi-save"
+    class="bg-salmon border-none text-white hover:bg-blue-black px-6 py-3 uppercase font-bold text-sm tracking-widest transition-colors"
+    [loading]="isSaving"
+    (click)="saveSettings()">
+  </button>
+</div>

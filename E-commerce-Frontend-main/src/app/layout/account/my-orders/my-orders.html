@@ -1,0 +1,54 @@
+<div class="bg-white border border-gray-100 p-6">
+  <h2 class="text-2xl font-black text-blue-black uppercase mb-6 border-b pb-4">My Orders</h2>
+
+  <div *ngIf="isLoading" class="flex justify-center py-12">
+    <i class="pi pi-spin pi-spinner text-3xl text-salmon"></i>
+  </div>
+
+  <div *ngIf="!isLoading && orders.length === 0" class="text-center py-16">
+    <i class="pi pi-box text-5xl text-gray-200 mb-4"></i>
+    <p class="text-gray-400 font-semibold">You haven't placed any orders yet.</p>
+    <a routerLink="/products" class="inline-block mt-4 bg-blue-black text-white px-8 py-3 text-sm font-bold uppercase hover:bg-salmon transition-colors">
+      Start Shopping
+    </a>
+  </div>
+
+  <div *ngIf="!isLoading && orders.length > 0" class="flex flex-col gap-4">
+    <div *ngFor="let order of orders"
+      class="border border-gray-100 p-4 hover:border-salmon transition-colors">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+        <div>
+          <p class="text-xs text-gray-400 font-semibold uppercase tracking-widest mb-1">
+            Order #{{ order._id | slice:0:8 }}…
+          </p>
+          <p class="text-xs text-gray-400">{{ order.createdAt | date:'dd MMM yyyy' }}</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 text-xs font-bold uppercase rounded-full" [class]="statusStyles[order.status] || 'bg-gray-100 text-gray-500'">
+            {{ order.status | orderStatus }}
+          </span>
+          <span class="text-lg font-black text-blue-black">${{ order.totalPrice }}</span>
+        </div>
+      </div>
+
+      
+      <div class="flex gap-2 flex-wrap mb-3">
+        <div *ngFor="let item of order.items.slice(0, 3)" class="text-xs text-gray-500 bg-gray-50 px-2 py-1">
+          {{ item.productNameSnapshot }} × {{ item.quantity }}
+        </div>
+        <div *ngIf="order.items.length > 3" class="text-xs text-gray-400 px-2 py-1">+{{ order.items.length - 3 }} more</div>
+      </div>
+
+      <div class="flex gap-3 flex-wrap">
+        <a [routerLink]="['/account/orders', order._id]"
+          class="text-sm font-bold text-salmon hover:underline">View Details →</a>
+        <button *ngIf="canCancel(order.status)"
+          [disabled]="cancellingId === order._id"
+          (click)="cancelOrder(order._id)"
+          class="text-sm font-bold text-red-400 hover:text-red-600 transition-colors disabled:opacity-40">
+          {{ cancellingId === order._id ? 'Cancelling…' : 'Cancel Order' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

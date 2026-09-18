@@ -1,0 +1,136 @@
+<div class="mb-4 flex justify-between items-center">
+  <h2 class="text-2xl font-black text-blue-black uppercase">Products Management</h2>
+  <button pButton type="button" label="Add New Product" icon="pi pi-plus" 
+    class="bg-blue-black text-white hover:bg-salmon border-none px-4 py-2 font-bold uppercase text-sm"
+    (click)="openNew()">
+  </button>
+</div>
+
+<p-confirmDialog></p-confirmDialog>
+
+<p-table [value]="products" [paginator]="true" [rows]="10" responsiveLayout="scroll"
+  [globalFilterFields]="['name','categoryId.title']"
+  styleClass="p-datatable-sm p-datatable-striped">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Image</th>
+      <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+      <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
+      <th pSortableColumn="stock">Stock <p-sortIcon field="stock"></p-sortIcon></th>
+      <th pSortableColumn="categoryId.title">Category <p-sortIcon field="categoryId.title"></p-sortIcon></th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-product>
+    <tr>
+      <td>
+        <img [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')" 
+          [alt]="product.name" class="w-12 h-12 object-cover rounded shadow-sm">
+      </td>
+      <td class="font-bold text-gray-700">{{product.name}}</td>
+      <td class="text-salmon font-bold">${{product.price}}</td>
+      <td>
+        <span class="px-2 py-1 rounded text-xs font-bold" 
+          [class.bg-green-100]="product.stock > 5" [class.text-green-800]="product.stock > 5"
+          [class.bg-orange-100]="product.stock > 0 && product.stock <= 5" [class.text-orange-800]="product.stock > 0 && product.stock <= 5"
+          [class.bg-red-100]="product.stock === 0" [class.text-red-800]="product.stock === 0">
+          {{product.stock}}
+        </span>
+      </td>
+      <td class="text-xs uppercase font-semibold text-gray-500">{{getCategoryName(product)}}</td>
+      <td>
+        <span class="px-2 py-1 rounded text-xs font-bold uppercase"
+          [class.bg-green-100]="product.isActive" [class.text-green-800]="product.isActive"
+          [class.bg-red-100]="!product.isActive" [class.text-red-800]="!product.isActive">
+          {{product.isActive ? 'Active' : 'Inactive'}}
+        </span>
+      </td>
+      <td>
+        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-sm mr-2 text-blue-500" (click)="editProduct(product)"></button>
+        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-sm text-red-500" (click)="deleteProduct($event, product)"></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<p-dialog [(visible)]="productDialog" [style]="{width: '600px'}" [header]="isEditing ? 'Edit Product' : 'Add New Product'" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div class="grid grid-cols-2 gap-4 mt-2">
+      
+      <div class="col-span-2">
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Name</label>
+        <input type="text" pInputText [(ngModel)]="currentProduct.name" required autofocus class="w-full border-gray-300 rounded" />
+      </div>
+
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Price ($)</label>
+        <input type="number" pInputText [(ngModel)]="currentProduct.price" required class="w-full border-gray-300 rounded" />
+      </div>
+
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Stock</label>
+        <input type="number" pInputText [(ngModel)]="currentProduct.stock" required class="w-full border-gray-300 rounded" />
+      </div>
+
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Season</label>
+        <p-select [options]="seasons" [(ngModel)]="currentProduct.season" optionLabel="label" optionValue="value"
+          placeholder="Select a Season" [style]="{'width':'100%'}" appendTo="body"></p-select>
+      </div>
+
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Category <span class="text-red-500">*</span></label>
+        <p-select [options]="categories" [(ngModel)]="currentProduct.categoryId" optionLabel="title" optionValue="_id" placeholder="Select a Category" (onChange)="onCategoryChange($event.value)" [style]="{'width':'100%'}" appendTo="body"></p-select>
+        <small class="text-red-500 block mt-1" *ngIf="!currentProduct.categoryId">Category is required</small>
+      </div>
+
+      
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Subcategory <span class="text-red-500">*</span></label>
+        <p-select [options]="subCategories" [(ngModel)]="currentProduct.subCategoryId" optionLabel="title" optionValue="_id" placeholder="Select a Subcategory" [disabled]="!currentProduct.categoryId" [style]="{'width':'100%'}" appendTo="body"></p-select>
+        <small class="text-red-500 block mt-1" *ngIf="!currentProduct.subCategoryId">Subcategory is required</small>
+      </div>
+
+      
+      <div class="col-span-2">
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Description</label>
+        <textarea pTextarea [(ngModel)]="currentProduct.desc" required rows="3" class="w-full border-gray-300 rounded"></textarea>
+      </div>
+
+      
+      <div class="col-span-2 flex items-center gap-3">
+        <input type="checkbox" [(ngModel)]="currentProduct.isActive" id="isActiveCheck" class="w-4 h-4 text-salmon border-gray-300 rounded" />
+        <label for="isActiveCheck" class="text-xs font-bold text-gray-500 uppercase cursor-pointer">Active (visible to customers)</label>
+      </div>
+
+      
+      <div class="col-span-2" *ngIf="saveError">
+        <p class="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{{ saveError }}</p>
+      </div>
+
+      <div class="col-span-2">
+        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">
+          Image <span class="text-red-500" *ngIf="!isEditing">*</span>
+        </label>
+        <p class="text-xs text-gray-400 mb-2">JPG, PNG, or WebP — max {{ maxImageMb }}MB</p>
+        <div class="flex items-center gap-4">
+          <input type="file" (change)="onFileSelected($event)" accept="image/jpeg,image/png,image/webp" class="text-sm">
+          <div *ngIf="isEditing && !selectedFile && currentProduct.image" class="w-16 h-16 border rounded bg-gray-50 overflow-hidden">
+            <img [src]="'http://localhost:3000/uploads/' + currentProduct.image.replace('uploads/', '')" class="w-full h-full object-cover">
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  
+  <ng-template pTemplate="footer">
+    <button pButton label="Cancel" icon="pi pi-times" class="p-button-text text-gray-600" (click)="hideDialog()"></button>
+    <button pButton label="Save" icon="pi pi-check" class="bg-salmon border-none text-white px-4 hover:bg-blue-black" (click)="saveProduct()" [loading]="isSaving" [disabled]="isSaving || !currentProduct.name || !currentProduct.price || !currentProduct.categoryId || !currentProduct.subCategoryId || (!isEditing && !selectedFile)"></button>
+  </ng-template>
+</p-dialog>

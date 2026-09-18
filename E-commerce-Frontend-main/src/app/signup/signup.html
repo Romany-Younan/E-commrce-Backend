@@ -1,0 +1,109 @@
+<div class="min-h-screen flex items-center justify-center bg-almond py-10">
+  <div class="bg-white p-10 md:w-[480px] w-full shadow-lg">
+
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-black text-blue-black uppercase">Create Account</h2>
+      <p class="text-gray-400 text-sm mt-1">Join us — it's free</p>
+    </div>
+
+    
+    <div *ngIf="errorMsg" class="mb-5 p-3 bg-red-50 border border-red-200 text-red-600 text-sm font-semibold">
+      {{ errorMsg }}
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" novalidate class="flex flex-col gap-4">
+
+      
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Full Name <span class="text-red-400">*</span></label>
+        <input pInputText type="text" formControlName="name"
+          placeholder="Ahmed Mohamed"
+          [ngClass]="{'border-red-400 focus:border-red-400 bg-red-50': signupForm.get('name')?.invalid && signupForm.get('name')?.touched}"
+          class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-salmon focus:outline-none transition-colors rounded-none">
+        <p *ngIf="signupForm.get('name')?.invalid && signupForm.get('name')?.touched" class="text-red-500 text-xs mt-0.5">Full name is required.</p>
+      </div>
+
+      
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Mobile Number <span class="text-red-400">*</span></label>
+        <input pInputText type="tel" formControlName="mobile"
+          placeholder="01xxxxxxxxx"
+          maxlength="11"
+          [ngClass]="{'border-red-400 focus:border-red-400 bg-red-50': signupForm.get('mobile')?.invalid && signupForm.get('mobile')?.touched}"
+          class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-salmon focus:outline-none transition-colors rounded-none">
+        <p *ngIf="signupForm.get('mobile')?.hasError('required') && signupForm.get('mobile')?.touched" class="text-red-500 text-xs mt-0.5">Mobile number is required.</p>
+        <p *ngIf="signupForm.get('mobile')?.hasError('pattern') && signupForm.get('mobile')?.touched" class="text-red-500 text-xs mt-0.5">Enter a valid Egyptian mobile (01xxxxxxxxx).</p>
+        <p *ngIf="!(signupForm.get('mobile')?.invalid && signupForm.get('mobile')?.touched)" class="text-gray-400 text-xs mt-0.5">Format: 01xxxxxxxxx (11 digits)</p>
+      </div>
+
+      
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Email <span class="text-gray-300 font-normal">(optional)</span></label>
+        <input pInputText type="email" formControlName="email"
+          placeholder="your@email.com"
+          [ngClass]="{'border-red-400 focus:border-red-400 bg-red-50': signupForm.get('email')?.invalid && signupForm.get('email')?.touched}"
+          class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-salmon focus:outline-none transition-colors rounded-none">
+        <p *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-red-500 text-xs mt-0.5">Enter a valid email address.</p>
+      </div>
+
+      
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Gender <span class="text-red-400">*</span></label>
+        <select formControlName="gender"
+          [ngClass]="{'border-red-400 focus:border-red-400 bg-red-50': signupForm.get('gender')?.invalid && signupForm.get('gender')?.touched}"
+          class="w-full border border-gray-200 bg-white px-4 py-3 text-sm focus:border-salmon focus:outline-none transition-colors">
+          <option value="" disabled>Select gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        <p *ngIf="signupForm.get('gender')?.invalid && signupForm.get('gender')?.touched" class="text-red-500 text-xs mt-0.5">Please select your gender.</p>
+      </div>
+
+      
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Password <span class="text-red-400">*</span></label>
+        <input pInputText type="password" formControlName="password"
+          placeholder="At least 8 characters"
+          [ngClass]="{'border-red-400 focus:border-red-400 bg-red-50': signupForm.get('password')?.invalid && signupForm.get('password')?.touched}"
+          class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-salmon focus:outline-none transition-colors rounded-none">
+        <p *ngIf="signupForm.get('password')?.hasError('required') && signupForm.get('password')?.touched" class="text-red-500 text-xs mt-0.5">Password is required.</p>
+        <p *ngIf="signupForm.get('password')?.hasError('minlength') && signupForm.get('password')?.touched" class="text-red-500 text-xs mt-0.5">Password must be at least 8 characters.</p>
+      </div>
+
+      
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider">Confirm Password <span class="text-red-400">*</span></label>
+        <input pInputText type="password" formControlName="passwordConfirm"
+          placeholder="Repeat password"
+          [ngClass]="{'border-red-400 focus:border-red-400 bg-red-50': signupForm.get('passwordConfirm')?.invalid && signupForm.get('passwordConfirm')?.touched}"
+          class="w-full border border-gray-200 px-4 py-3 text-sm focus:border-salmon focus:outline-none transition-colors rounded-none">
+        <p *ngIf="signupForm.get('passwordConfirm')?.hasError('required') && signupForm.get('passwordConfirm')?.touched" class="text-red-500 text-xs mt-0.5">Confirm password is required.</p>
+        <p *ngIf="signupForm.get('passwordConfirm')?.hasError('mismatch') && signupForm.get('passwordConfirm')?.touched" class="text-red-500 text-xs mt-0.5">Passwords do not match.</p>
+      </div>
+
+      
+      <div class="flex flex-col gap-1">
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" formControlName="termsAccepted"
+            class="mt-1 w-4 h-4 accent-salmon flex-shrink-0">
+          <span class="text-sm text-gray-500 leading-relaxed">
+            I agree to the <span class="text-salmon font-semibold cursor-pointer">Terms & Conditions</span>
+            and consent to my data being stored. <span class="text-red-400">*</span>
+          </span>
+        </label>
+        <p *ngIf="signupForm.get('termsAccepted')?.invalid && signupForm.get('termsAccepted')?.touched" class="text-red-500 text-xs mt-0.5">You must accept the terms to continue.</p>
+      </div>
+
+      <button pButton type="submit"
+        label="Create Account"
+        class="w-full bg-blue-black border-none text-white hover:bg-salmon transition-colors py-3 uppercase font-bold tracking-widest mt-2"
+        [loading]="isLoading">
+      </button>
+    </form>
+
+    <div class="mt-6 text-center text-sm text-gray-500">
+      Already have an account?
+      <a routerLink="/login" class="text-salmon font-semibold hover:underline ml-1">Sign In</a>
+    </div>
+  </div>
+</div>

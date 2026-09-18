@@ -1,0 +1,104 @@
+<h2 class="text-2xl font-black text-blue-black uppercase mb-6">Dashboard Overview</h2>
+
+<div *ngIf="isLoading" class="flex justify-center py-12">
+  <i class="pi pi-spin pi-spinner text-3xl text-salmon"></i>
+</div>
+
+<div *ngIf="!isLoading">
+  
+  <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+    
+    <a routerLink="/admin/products" class="block bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow group">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+          <i class="pi pi-box text-blue-black text-xl"></i>
+        </div>
+        <i class="pi pi-angle-right text-gray-300 group-hover:text-salmon transition-colors"></i>
+      </div>
+      <p class="text-3xl font-black text-blue-black">{{stats.totalProducts}}</p>
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mt-1">Products</p>
+    </a>
+
+    <a routerLink="/admin/orders" class="block bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow group">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center">
+          <i class="pi pi-shopping-cart text-salmon text-xl"></i>
+        </div>
+        <i class="pi pi-angle-right text-gray-300 group-hover:text-salmon transition-colors"></i>
+      </div>
+      <p class="text-3xl font-black text-blue-black">{{stats.totalOrders}}</p>
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mt-1">Total Orders</p>
+    </a>
+
+    <a routerLink="/admin/users" class="block bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow group">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+          <i class="pi pi-users text-green-600 text-xl"></i>
+        </div>
+        <i class="pi pi-angle-right text-gray-300 group-hover:text-salmon transition-colors"></i>
+      </div>
+      <p class="text-3xl font-black text-blue-black">{{stats.totalUsers}}</p>
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mt-1">Registered Users</p>
+    </a>
+
+    <a routerLink="/admin/testimonials" class="block bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow group">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+          <i class="pi pi-star text-purple-600 text-xl"></i>
+        </div>
+        <span *ngIf="stats.pendingTestimonials > 0" class="text-xs font-bold bg-red-500 text-white px-2 py-0.5 rounded-full">{{stats.pendingTestimonials}} pending</span>
+      </div>
+      <p class="text-3xl font-black text-blue-black">{{stats.pendingTestimonials}}</p>
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mt-1">Pending Reviews</p>
+    </a>
+
+    <a routerLink="/admin/refunds" class="block bg-white rounded-xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-shadow group">
+      <div class="flex items-center justify-between mb-3">
+        <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
+          <i class="pi pi-reply text-red-600 text-xl"></i>
+        </div>
+        <span *ngIf="stats.pendingRefunds > 0" class="text-xs font-bold bg-red-500 text-white px-2 py-0.5 rounded-full">{{stats.pendingRefunds}} pending</span>
+      </div>
+      <p class="text-3xl font-black text-blue-black">{{stats.pendingRefunds}}</p>
+      <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mt-1">Pending Refunds</p>
+    </a>
+
+  </div>
+
+  
+  <div>
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="text-sm font-black text-gray-500 uppercase tracking-widest">Recent Orders</h3>
+      <a routerLink="/admin/orders" class="text-xs font-bold text-salmon hover:underline">View All →</a>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-b border-gray-100">
+            <th class="text-left py-2 px-3 text-xs font-bold text-gray-400 uppercase">Date</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-gray-400 uppercase">Customer</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-gray-400 uppercase">Total</th>
+            <th class="text-left py-2 px-3 text-xs font-bold text-gray-400 uppercase">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of recentOrders" class="border-b border-gray-50 hover:bg-gray-50 transition-colors">
+            <td class="py-3 px-3 text-gray-500">{{order.createdAt | date:'dd MMM yyyy'}}</td>
+            <td class="py-3 px-3 font-semibold text-gray-700">{{ getUserName(order.userId) }}</td>
+            <td class="py-3 px-3 text-salmon font-bold">${{order.totalPrice}}</td>
+            <td class="py-3 px-3">
+              <span class="px-2 py-1 rounded text-xs font-bold uppercase"
+                [class.bg-yellow-100]="order.status === 'pending'" [class.text-yellow-800]="order.status === 'pending'"
+                [class.bg-blue-100]="order.status === 'preparing' || order.status === 'shipped'" [class.text-blue-800]="order.status === 'preparing' || order.status === 'shipped'"
+                [class.bg-green-100]="order.status === 'received'" [class.text-green-800]="order.status === 'received'"
+                [class.bg-red-100]="order.status === 'refused' || order.status.includes('cancelled')" [class.text-red-800]="order.status === 'refused' || order.status.includes('cancelled')">
+                {{ order.status | orderStatus }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
