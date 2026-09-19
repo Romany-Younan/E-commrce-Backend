@@ -10,6 +10,7 @@ import { ConfirmationService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { IHeroSlide } from '../../core/models/hero-slide';
+import { toImageUrl } from '../../core/utils/image.util';
 
 @Component({
   selector: 'app-admin-hero-slides',
@@ -20,6 +21,7 @@ import { IHeroSlide } from '../../core/models/hero-slide';
   styleUrl: './admin-hero-slides.scss'
 })
 export class AdminHeroSlides implements OnInit {
+  protected readonly imgUrl = toImageUrl;
   slides: IHeroSlide[] = [];
   isLoading = true;
   slideDialog = false;

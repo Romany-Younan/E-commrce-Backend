@@ -14,6 +14,7 @@ import { ICategory } from '../../core/models/category';
 import { ISubCategory } from '../../core/models/subcategory';
 import { DEFAULT_SEASON } from '../../core/constants/seasons';
 import { getProductCategoryName } from '../../core/utils/product.util';
+import { toImageUrl } from '../../core/utils/image.util';
 
 @Component({
   selector: 'app-products-list',
@@ -23,6 +24,7 @@ import { getProductCategoryName } from '../../core/utils/product.util';
   styleUrl: './products-list.scss',
 })
 export class ProductsList implements OnInit {
+  protected readonly imgUrl = toImageUrl;
   products: IProduct[] = [];
   categories: ICategory[] = [];
   totalRecords = 0;

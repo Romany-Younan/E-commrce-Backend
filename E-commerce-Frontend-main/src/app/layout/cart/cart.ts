@@ -6,6 +6,7 @@ import { Auth } from '../../core/services/auth';
 import { ButtonModule } from 'primeng/button';
 import { ICart, ICartItem } from '../../core/models/cart';
 import { ApiResponse } from '../../core/models/api-response';
+import { toImageUrl } from '../../core/utils/image.util';
 
 @Component({
   selector: 'app-cart',
@@ -15,6 +16,7 @@ import { ApiResponse } from '../../core/models/api-response';
   styleUrl: './cart.scss',
 })
 export class Cart implements OnInit {
+  protected readonly imgUrl = toImageUrl;
   cart: ICart | null = null;
   isLoading = true;
   isAdmin = false;

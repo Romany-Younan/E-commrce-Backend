@@ -9,6 +9,7 @@ import { CartService } from '../../core/services/cart';
 import { Auth } from '../../core/services/auth';
 import { ButtonModule } from 'primeng/button';
 import { IProduct } from '../../core/models/product';
+import { toImageUrl } from '../../core/utils/image.util';
 
 @Component({
   selector: 'app-product-details',
@@ -18,6 +19,7 @@ import { IProduct } from '../../core/models/product';
   styleUrl: './product-details.scss',
 })
 export class ProductDetails implements OnInit {
+  protected readonly imgUrl = toImageUrl;
   product: IProduct | null = null;
   isLoading = true;
   quantity = 1;

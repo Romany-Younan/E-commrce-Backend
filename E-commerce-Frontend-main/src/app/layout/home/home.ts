@@ -10,6 +10,7 @@ import { ITestimonial } from '../../core/models/testimonial';
 import { ApiResponse } from '../../core/models/api-response';
 import { getProductCategoryName } from '../../core/utils/product.util';
 import { getUserName } from '../../core/utils/populated.util';
+import { toImageUrl } from '../../core/utils/image.util';
 
 @Component({
   selector: 'app-home',
@@ -19,6 +20,7 @@ import { getUserName } from '../../core/utils/populated.util';
 })
 export class Home implements OnInit, OnDestroy {
   protected readonly getUserName = getUserName;
+  protected readonly imgUrl = toImageUrl;
 
   slides: IHeroSlide[] = [];
   newArrivals: IProduct[] = [];

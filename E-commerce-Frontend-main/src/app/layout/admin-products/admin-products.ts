@@ -16,6 +16,7 @@ import { ICategory } from '../../core/models/category';
 import { ISubCategory } from '../../core/models/subcategory';
 import { SEASON_OPTIONS, DEFAULT_SEASON } from '../../core/constants/seasons';
 import { getProductCategoryName, getRefId } from '../../core/utils/product.util';
+import { toImageUrl } from '../../core/utils/image.util';
 import { getApiErrorMessage } from '../../core/utils/api-error.util';
 import { MAX_IMAGE_SIZE_BYTES, MAX_IMAGE_SIZE_MB } from '../../core/constants/upload';
 
@@ -31,6 +32,7 @@ import { MAX_IMAGE_SIZE_BYTES, MAX_IMAGE_SIZE_MB } from '../../core/constants/up
   styleUrl: './admin-products.scss'
 })
 export class AdminProducts implements OnInit {
+  protected readonly imgUrl = toImageUrl;
   products: IProduct[] = [];
   categories: ICategory[] = [];
   subCategories: ISubCategory[] = [];

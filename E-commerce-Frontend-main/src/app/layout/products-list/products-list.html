@@ -101,7 +101,7 @@
       
       <div class="relative overflow-hidden aspect-[3/4] bg-gray-50 mb-3">
         <img
-          [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')"
+          [src]="imgUrl(product.image)"
           [alt]="product.name"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
 

@@ -25,7 +25,7 @@
   <ng-template pTemplate="body" let-product>
     <tr>
       <td>
-        <img [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')" 
+        <img [src]="imgUrl(product.image)" 
           [alt]="product.name" class="w-12 h-12 object-cover rounded shadow-sm">
       </td>
       <td class="font-bold text-gray-700">{{product.name}}</td>
@@ -122,7 +122,7 @@
         <div class="flex items-center gap-4">
           <input type="file" (change)="onFileSelected($event)" accept="image/jpeg,image/png,image/webp" class="text-sm">
           <div *ngIf="isEditing && !selectedFile && currentProduct.image" class="w-16 h-16 border rounded bg-gray-50 overflow-hidden">
-            <img [src]="'http://localhost:3000/uploads/' + currentProduct.image.replace('uploads/', '')" class="w-full h-full object-cover">
+            <img [src]="imgUrl(currentProduct.image)" class="w-full h-full object-cover">
           </div>
         </div>
       </div>

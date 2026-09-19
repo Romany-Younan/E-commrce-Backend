@@ -23,7 +23,7 @@
 <div *ngIf="!isLoading && slides.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
   <div *ngFor="let slide of slides" class="bg-white border border-gray-100 shadow-sm rounded overflow-hidden">
     <div class="aspect-[16/7] bg-gray-100 overflow-hidden">
-      <img [src]="'http://localhost:3000/uploads/' + slide.image.replace('uploads/', '')"
+      <img [src]="imgUrl(slide.image)"
            [alt]="slide.title" class="w-full h-full object-cover">
     </div>
     <div class="p-4">
@@ -100,7 +100,7 @@
           <img [src]="previewUrl" class="w-full h-full object-cover" alt="Preview">
         </div>
         <div *ngIf="isEditing && !previewUrl && selectedSlide?.image" class="mt-3 rounded overflow-hidden border border-gray-200 aspect-[16/7]">
-          <img [src]="'http://localhost:3000/uploads/' + selectedSlide?.image?.replace('uploads/', '')" class="w-full h-full object-cover" alt="Current image">
+          <img [src]="imgUrl(selectedSlide?.image)" class="w-full h-full object-cover" alt="Current image">
         </div>
       </div>
 

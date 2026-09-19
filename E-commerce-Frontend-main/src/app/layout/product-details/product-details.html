@@ -9,7 +9,7 @@
     
     <div class="md:w-1/2">
       <div class="aspect-[3/4] overflow-hidden bg-gray-50 border border-gray-100">
-        <img [src]="'http://localhost:3000/uploads/' + product.image.replace('uploads/', '')"
+        <img [src]="imgUrl(product.image)"
           [alt]="product.name" class="w-full h-full object-cover">
       </div>
     </div>
@@ -81,7 +81,7 @@
            [routerLink]="['/product', item._id]">
         
         <div class="aspect-[3/4] overflow-hidden bg-gray-50 relative">
-          <img [src]="'http://localhost:3000/uploads/' + item.image.replace('uploads/', '')" 
+          <img [src]="imgUrl(item.image)" 
                [alt]="item.name" 
                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
           

@@ -23,7 +23,7 @@
       
       <div class="lg:w-2/3 flex flex-col gap-4">
         <div *ngFor="let item of cart?.validItems" class="flex items-center gap-6 bg-white p-4 shadow-sm border border-gray-100">
-          <img [src]="'http://localhost:3000/uploads/' + item.product.image.replace('uploads/', '')" [alt]="item.product.name" class="w-24 h-32 object-cover bg-gray-50">
+          <img [src]="imgUrl(item.product.image)" [alt]="item.product.name" class="w-24 h-32 object-cover bg-gray-50">
           
           <div class="flex-grow">
             <h3 class="text-lg font-bold text-blue-black uppercase mb-1">{{item.product.name}}</h3>
@@ -76,7 +76,7 @@
             
             <div *ngFor="let item of cart?.actionRequiredItems" class="bg-white border border-red-200 p-4 mb-4 shadow-sm">
               <div class="flex items-start gap-4">
-                <img *ngIf="item.product?.image" [src]="'http://localhost:3000/uploads/' + item.product.image.replace('uploads/', '')" class="w-16 h-20 object-cover bg-gray-50">
+                <img *ngIf="item.product?.image" [src]="imgUrl(item.product.image)" class="w-16 h-20 object-cover bg-gray-50">
                 <div class="flex-grow">
                   <h4 class="text-sm font-bold text-blue-black">{{item.product?.name || 'Unknown Product'}}</h4>
                   
